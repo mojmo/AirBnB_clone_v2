@@ -1,9 +1,10 @@
 #!/usr/bin/python3
 """"""
 import cmd
-from models.base_model import BaseModel
-from models import storage
 import re
+
+from models import storage
+from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
@@ -176,7 +177,6 @@ class HBNBCommand(cmd.Cmd):
 
             if (cls_name in HBNBCommand.defined_classes and
                     match_method is not None):
-
                 method_name = match_method.group(1)
                 args = match_method.group(2)
                 args = re.sub("[\"\',]", "", args)
