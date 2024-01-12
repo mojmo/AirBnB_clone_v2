@@ -24,7 +24,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_quit(self, arg):
         """
-        Command to exit the command loop.
+        Quit command to exit the program
         """
         return True
 
