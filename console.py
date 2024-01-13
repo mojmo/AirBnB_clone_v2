@@ -8,6 +8,27 @@ import re
 
 from models import storage
 from models.engine.file_storage import get_class_name_to_class
+from shlex import split
+
+
+def parse_command(command):
+
+    dict_arg = re.search(r'\{(.*?)\}', command)
+    list_arg = re.search(r'\{(.*?)\}', command)
+
+    if dict_arg is None:
+        if list_arg is None:
+            return [arg.strip(',') for arg in split(command)]
+        else:
+            tokens_before_list = split(command[:list_arg.start()])
+            parsed = [token.strip(',') for token in tokens_before_list]
+            parsed = parsed.append(list_arg.group())
+            return parsed
+    else:
+        tokens_before_dict = split(command[:dict_arg.start()])
+        parsed = [token.strip(',') for token in tokens_before_dict]
+        parsed = parsed.append(list_arg.group())
+        return parsed
 
 
 class HBNBCommand(cmd.Cmd):
@@ -44,14 +65,14 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         """Create a new instance of a specified class.
         """
-        arg = arg.strip()
-        if len(arg) == 0:
+        args = parse_command(arg)
+        if len(args) == 0:
             print("** class name missing **")
-        elif arg not in HBNBCommand.defined_classes:
+        elif args[0] not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
         else:
             class_name_to_class = get_class_name_to_class()
-            cls = class_name_to_class[arg]
+            cls = class_name_to_class[args[0]]
             new_model = cls()
             storage.save()
             print(new_model.id)
@@ -59,8 +80,7 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         """Display information about a specific instance.
         """
-        line = line.strip()
-        args = line.split(' ')
+        args = parse_command(line)
         objects_dict = storage.all()
         if len(line) == 0:
             print("** class name missing **")
@@ -76,8 +96,7 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, line):
         """Remove a specified instance.
         """
-        line = line.strip()
-        args = line.split(' ')
+        args = parse_command(line)
         objects_dict = storage.all()
         if len(line) == 0:
             print("** class name missing **")
@@ -94,25 +113,24 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """List all instances or instances of a specific class.
         """
-        arg = arg.strip()
+        args = parse_command(arg)
         objects_dict = storage.all()
         objects_list = [f"{val}" for val in objects_dict.values()]
-        if len(arg) == 0:
+        if len(args) == 0:
             print(objects_list)
-        elif arg not in HBNBCommand.defined_classes:
+        elif args[0] not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
         else:
             cls_objects = []
             for obj in objects_dict.values():
-                if obj.__class__.__name__ == arg:
+                if obj.__class__.__name__ == args[0]:
                     cls_objects.append(obj.__str__())
             print(cls_objects)
 
     def do_update(self, line):
         """Update the attributes of a specified instance.
         """
-        line = line.strip()
-        args = line.split(' ')
+        args = parse_command(line)
         objects_dict = storage.all()
 
         if len(args) == 1:
@@ -126,7 +144,21 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) == 2:
             print("** attribute name missing **")
         elif len(args) == 3:
-            print("** value missing **")
+            if type(eval(args[2])) == dict:
+                updated_obj = objects_dict[f'{args[0]}.{args[1]}']
+
+                for key, val in eval(args[2]).items():
+                    if (key in updated_obj.__class__.__dict__.keys() and
+                        type(updated_obj.__class__.__dict__[key] in
+                             [str, int, float])):
+                        value_type = type(updated_obj.__class__.__dict__[key])
+                        updated_obj.__dict__[key] = value_type(val)
+                    else:
+                        updated_obj.__dict__[key] = val
+
+                storage.save()
+            else:
+                print("** value missing **")
         else:
             updated_obj = objects_dict[f'{args[0]}.{args[1]}']
             # If the updated argument is new
@@ -141,9 +173,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, line):
         """Count the number of instances of a specified class.
         """
-
-        line = line.strip()
-        args = line.split(' ')
+        args = parse_command(line)
         objects_dict = storage.all()
         count = 0
 
@@ -174,7 +204,7 @@ class HBNBCommand(cmd.Cmd):
                     match_method is not None):
                 method_name = match_method.group(1)
                 args = match_method.group(2)
-                args = re.sub("[\"\',]", "", args)
+                # args = re.sub("[\"\',]", "", args)
                 args = f"{cls_name} " + args
 
                 return methods[method_name](args)
