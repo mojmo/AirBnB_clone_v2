@@ -133,7 +133,7 @@ class HBNBCommand(cmd.Cmd):
         args = parse_command(line)
         objects_dict = storage.all()
 
-        if len(args) == 1:
+        if len(args) == 0:
             print("** class name missing **")
         elif args[0] not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
@@ -144,6 +144,19 @@ class HBNBCommand(cmd.Cmd):
         elif len(args) == 2:
             print("** attribute name missing **")
         elif len(args) == 3:
+            if type(eval(args[2])) != dict:
+                print("** value missing **")
+        elif len(args) == 4:
+            updated_obj = objects_dict[f'{args[0]}.{args[1]}']
+            # If the updated argument is new
+            if args[2] in updated_obj.__class__.__dict__.keys():
+                value_type = type(updated_obj.__class__.__dict__[args[2]])
+                updated_obj.__dict__[args[2]] = value_type(args[3])
+            else:
+                updated_obj.__dict__[args[2]] = args[3]
+
+            storage.save()
+        else:
             if type(eval(args[2])) == dict:
                 updated_obj = objects_dict[f'{args[0]}.{args[1]}']
 
@@ -157,18 +170,6 @@ class HBNBCommand(cmd.Cmd):
                         updated_obj.__dict__[key] = val
 
                 storage.save()
-            else:
-                print("** value missing **")
-        else:
-            updated_obj = objects_dict[f'{args[0]}.{args[1]}']
-            # If the updated argument is new
-            if args[2] in updated_obj.__class__.__dict__.keys():
-                value_type = type(updated_obj.__class__.__dict__[args[2]])
-                updated_obj.__dict__[args[2]] = value_type(args[3])
-            else:
-                updated_obj.__dict__[args[2]] = args[3]
-
-            storage.save()
 
     def do_count(self, line):
         """Count the number of instances of a specified class.
