@@ -6,7 +6,7 @@ import cmd
 import re
 
 from models import storage
-from models.base_model import BaseModel
+from models.engine.file_storage import get_class_name_to_class
 
 
 class HBNBCommand(cmd.Cmd):
@@ -49,7 +49,9 @@ class HBNBCommand(cmd.Cmd):
         elif arg not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
         else:
-            new_model = BaseModel()
+            class_name_to_class = get_class_name_to_class()
+            cls = class_name_to_class[arg]
+            new_model = cls()
             storage.save()
             print(new_model.id)
 
