@@ -46,7 +46,7 @@ class BaseModel:
         the storage save process.
         """
         self.updated_at = datetime.now()
-        models.storage.save(self)
+        models.storage.save()
 
     def to_dict(self):
         """
