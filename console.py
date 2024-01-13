@@ -22,12 +22,12 @@ def parse_command(command):
         else:
             tokens_before_list = split(command[:list_arg.start()])
             parsed = [token.strip(',') for token in tokens_before_list]
-            parsed = parsed.append(list_arg.group())
+            parsed = parsed + [list_arg.group()]
             return parsed
     else:
         tokens_before_dict = split(command[:dict_arg.start()])
         parsed = [token.strip(',') for token in tokens_before_dict]
-        parsed = parsed.append(list_arg.group())
+        parsed = parsed + [dict_arg.group()]
         return parsed
 
 
@@ -135,18 +135,23 @@ class HBNBCommand(cmd.Cmd):
 
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in HBNBCommand.defined_classes:
+            return
+        if args[0] not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
-        elif len(args) == 1:
+            return
+        if len(args) == 1:
             print("** instance id missing **")
-        elif f'{args[0]}.{args[1]}' not in objects_dict:
+            return
+        if f'{args[0]}.{args[1]}' not in objects_dict:
             print("** no instance found **")
-        elif len(args) == 2:
+            return
+        if len(args) == 2:
             print("** attribute name missing **")
-        elif len(args) == 3:
-            if type(eval(args[2])) != dict:
-                print("** value missing **")
-        elif len(args) == 4:
+            return
+        if len(args) == 3 and type(eval(args[2])) != dict:
+            print("** value missing **")
+            return
+        if len(args) == 4:
             updated_obj = objects_dict[f'{args[0]}.{args[1]}']
             # If the updated argument is new
             if args[2] in updated_obj.__class__.__dict__.keys():
@@ -156,20 +161,19 @@ class HBNBCommand(cmd.Cmd):
                 updated_obj.__dict__[args[2]] = args[3]
 
             storage.save()
-        else:
-            if type(eval(args[2])) == dict:
-                updated_obj = objects_dict[f'{args[0]}.{args[1]}']
+        elif type(eval(args[2])) == dict:
+            updated_obj = objects_dict[f'{args[0]}.{args[1]}']
 
-                for key, val in eval(args[2]).items():
-                    if (key in updated_obj.__class__.__dict__.keys() and
-                        type(updated_obj.__class__.__dict__[key] in
-                             [str, int, float])):
-                        value_type = type(updated_obj.__class__.__dict__[key])
-                        updated_obj.__dict__[key] = value_type(val)
-                    else:
-                        updated_obj.__dict__[key] = val
+            for key, val in eval(args[2]).items():
+                if (key in updated_obj.__class__.__dict__.keys() and
+                    type(updated_obj.__class__.__dict__[key] in
+                         [str, int, float])):
+                    value_type = type(updated_obj.__class__.__dict__[key])
+                    updated_obj.__dict__[key] = value_type(val)
+                else:
+                    updated_obj.__dict__[key] = val
 
-                storage.save()
+            storage.save()
 
     def do_count(self, line):
         """Count the number of instances of a specified class.
