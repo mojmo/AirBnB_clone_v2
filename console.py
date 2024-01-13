@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-""""""
+"""Provides a command-line interface for interacting with
+storage and data models.
+"""
 import cmd
 import re
 
@@ -8,7 +10,7 @@ from models.base_model import BaseModel
 
 
 class HBNBCommand(cmd.Cmd):
-    """"""
+    """Command-line interface for managing data models and storage."""
 
     prompt = '(hbnb) '
 
