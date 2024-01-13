@@ -2,13 +2,25 @@
 """Provides a simple storage system for managing and persisting
 objects in JSON format."""
 import json
-from models.base_model import BaseModel
-from models.user import User
-from models.place import Place
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.review import Review
+
+
+def get_class_name_to_class():
+    # This function is used to avoid circular import
+    from models.user import User
+    from models.state import State
+    from models.city import City
+    from models.amenity import Amenity
+    from models.place import Place
+    from models.review import Review
+
+    return {
+        'User': User,
+        'State': State,
+        'City': City,
+        'Amenity': Amenity,
+        'Place': Place,
+        'Review': Review
+    }
 
 
 class FileStorage:
@@ -49,6 +61,7 @@ class FileStorage:
 
     def reload(self):
         """Load objects from the JSON file into the storage dictionary."""
+        class_name_to_class = get_class_name_to_class()
 
         try:
             with open(FileStorage.__file_path) as json_file:
@@ -56,7 +69,12 @@ class FileStorage:
 
                 for obj in objects_dict.values():
                     class_name = obj['__class__']
-                    self.new(eval(class_name)(**obj))
+                    # Use the mapping insted of eval function
+                    # to avoid security issues with eval function
+                    if class_name in class_name_to_class:
+                        cls = class_name_to_class[class_name]
+                        # self.new(eval(class_name)(**obj))
+                        self.new(cls(**obj))
 
         except FileNotFoundError:
             return
