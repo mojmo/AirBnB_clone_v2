@@ -1,9 +1,11 @@
+"""Unit tests for the Amenity class."""
 import unittest
 
 from models.amenity import Amenity
 
 
 class TestAmenity(unittest.TestCase):
+    """Contains unit tests for the Amenity class."""
 
     def test_amenity_instance_with_name_attribute(self):
         """
@@ -21,7 +23,8 @@ class TestAmenity(unittest.TestCase):
 
     def test_amenity_instance_with_non_string_name_attribute(self):
         """
-        Test that an Amenity instance can be created with a non-string name attribute
+        Test that an Amenity instance can be created with a non-string
+        name attribute
         """
         amenity = Amenity(name=123)
         self.assertEqual(amenity.name, 123)

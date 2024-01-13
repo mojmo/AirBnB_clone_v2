@@ -1,3 +1,4 @@
+"""Unit tests for the BaseModel class."""
 import unittest
 from datetime import datetime
 
@@ -5,6 +6,7 @@ from models.base_model import BaseModel
 
 
 class TestBaseModel(unittest.TestCase):
+    """Contains unit tests for the BaseModel class."""
 
     def test_base_model_instance_no_arguments(self):
         """
@@ -23,7 +25,8 @@ class TestBaseModel(unittest.TestCase):
 
     def test_base_model_instance_invalid_created_at(self):
         """
-        Test that a BaseModel instance cannot be created with an invalid created_at
+        Test that a BaseModel instance cannot be created with an
+        invalid created_at
         """
         with self.assertRaises(ValueError):
             BaseModel(created_at='invalid_date')

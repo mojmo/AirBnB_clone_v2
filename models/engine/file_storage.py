@@ -5,6 +5,17 @@ import json
 
 
 def get_class_name_to_class():
+    """
+    Returns a dictionary mapping class names to their corresponding
+    class objects.
+
+    This function is used to avoid circular imports by dynamically
+    importing the necessary classes.
+
+    Returns:
+        dict: A dictionary where keys are class names and values are
+        the corresponding class objects.
+    """
     # This function is used to avoid circular import
     from models.user import User
     from models.state import State

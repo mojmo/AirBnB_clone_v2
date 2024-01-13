@@ -1,15 +1,22 @@
+"""Unit tests for the Place class."""
 import unittest
 
 from models.place import Place
 
 
 class TestPlace(unittest.TestCase):
+    """Contains unit tests for the Place class."""
 
     def test_create_place_with_all_attributes(self):
-        """test_create_place_with_all_attributes tests that when a Place object is"""
-        place = Place(city_id='123', user_id='456', name='Test Place', description='This is a test place',
-                      number_rooms=2, number_bathrooms=1, max_guest=4, price_by_night=100.0,
-                      latitude=37.7749, longitude=-122.4194, amenity_ids=['wifi', 'pool'])
+        """
+        test_create_place_with_all_attributes tests that
+        when a Place object is
+        """
+        place = Place(city_id='123', user_id='456', name='Test Place',
+                      description='This is a test place',
+                      number_rooms=2, number_bathrooms=1, max_guest=4,
+                      price_by_night=100.0, latitude=37.7749,
+                      longitude=-122.4194, amenity_ids=['wifi', 'pool'])
         self.assertEqual(place.city_id, '123')
         self.assertEqual(place.user_id, '456')
         self.assertEqual(place.name, 'Test Place')
@@ -23,8 +30,10 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.amenity_ids, ['wifi', 'pool'])
 
     def test_update_and_save_place(self):
-        """test_update_and_save_place tests that when a Place object is updated and saved
-            the updated_at attribute is updated"""
+        """
+        test_update_and_save_place tests that when a Place object is
+        updated and saved the updated_at attribute is updated
+        """
         place = Place()
         place.city_id = '123'
         place.user_id = '456'
@@ -50,7 +59,6 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.latitude, 37.7749)
         self.assertEqual(place.longitude, -122.4194)
         self.assertEqual(place.amenity_ids, ['wifi', 'pool'])
-
 
     #  Place object attributes can be accessed and modified
     def test_access_and_modify_attributes(self):
@@ -103,9 +111,11 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.longitude, -122.4195)
         self.assertEqual(place.amenity_ids, ['wifi', 'pool', 'gym'])
 
-    #
     def test_create_place_with_minimum_attributes(self):
-        """test_create_place_with_minimum_attributes tests that when a Place object is"""
+        """
+        test_create_place_with_minimum_attributes tests that
+        when a Place object is
+        """
         place = Place(city_id='123', user_id='456', name='Test Place')
 
         self.assertEqual(place.city_id, '123')
@@ -119,12 +129,18 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.latitude, 0.0)
         self.assertEqual(place.longitude, 0.0)
         self.assertEqual(place.amenity_ids, [])
-    #
+
     def test_create_place_with_maximum_attributes(self):
-        """test_create_place_with_maximum_attributes tests that when a Place object is"""
-        place = Place(city_id='123', user_id='456', name='Test Place', description='This is a test place',
-                      number_rooms=1000000, number_bathrooms=1000000, max_guest=1000000, price_by_night=1000000.0,
-                      latitude=90.0, longitude=180.0, amenity_ids=['wifi'] * 1000000)
+        """
+        test_create_place_with_maximum_attributes tests that when
+        a Place object is
+        """
+        place = Place(city_id='123', user_id='456', name='Test Place',
+                      description='This is a test place',
+                      number_rooms=1000000, number_bathrooms=1000000,
+                      max_guest=1000000, price_by_night=1000000.0,
+                      latitude=90.0, longitude=180.0,
+                      amenity_ids=['wifi'] * 1000000)
 
         self.assertEqual(place.city_id, '123')
         self.assertEqual(place.user_id, '456')
@@ -139,7 +155,10 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.amenity_ids, ['wifi'] * 1000000)
 
     def test_create_place_with_empty_string_attributes(self):
-        """test_create_place_with_empty_string_attributes tests that when a Place object is"""
+        """
+        test_create_place_with_empty_string_attributes tests that
+        when a Place object is
+        """
         place = Place(city_id='', user_id='', name='', description='')
 
         self.assertEqual(place.city_id, '')
@@ -154,9 +173,11 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.longitude, 0.0)
         self.assertEqual(place.amenity_ids, [])
 
-
     def test_create_place_with_integer_values_for_float_attributes(self):
-        """test_create_place_with_integer_values_for_float_attributes tests that when a Place"""
+        """
+        test_create_place_with_integer_values_for_float_attributes
+        tests that when a Place
+        """
         place = Place(price_by_night=100, latitude=37, longitude=-122)
 
         self.assertEqual(place.price_by_night, 100.0)
@@ -164,7 +185,10 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.longitude, -122.0)
 
     def test_create_place_with_non_ascii_characters(self):
-        """test_create_place_with_non_ascii_characters tests that when a Place object is"""
+        """
+        test_create_place_with_non_ascii_characters tests that
+        when a Place object is
+        """
         place = Place(name='Café')
 
         self.assertEqual(place.name, 'Café')

@@ -1,9 +1,11 @@
+"""Unit tests for the Review class."""
 import unittest
 
 from models.review import Review
 
 
 class TestReview(unittest.TestCase):
+    """Contains unit tests for the Review class."""
 
     def test_create_review_with_required_attributes(self):
         """test_create_review_with_required_attributes tests that when a"""
@@ -23,7 +25,10 @@ class TestReview(unittest.TestCase):
 
     #  Review instance can be saved successfully
     def test_save_review_successfully(self):
-        """test_save_review_successfully tests that when a Review instance is"""
+        """
+        test_save_review_successfully tests that when
+        a Review instance is
+        """
         review = Review()
         review.save()
         self.assertIsNotNone(review.updated_at)
@@ -52,7 +57,8 @@ class TestReview(unittest.TestCase):
 
     def test_create_review_with_invalid_dates(self):
         """test_create_review_with_invalid_dates tests that when a Review"""
-        review = Review(created_at='2021-01-01T00:00:00.000000', updated_at='2022-01-01T00:00:00.000000')
+        review = Review(created_at='2021-01-01T00:00:00.000000',
+                        updated_at='2022-01-01T00:00:00.000000')
         self.assertIsInstance(review, Review)
         self.assertIsNotNone(review.created_at)
         self.assertIsNotNone(review.updated_at)

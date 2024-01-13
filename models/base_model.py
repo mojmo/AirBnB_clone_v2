@@ -19,7 +19,8 @@ class BaseModel:
         """
         if kwargs:
             # The __class__ key if being deleted from the kwargs
-            # in the BaseModel __init__ method without first checking if it exists.
+            # in the BaseModel __init__ method without first checking
+            # if it exists.
             # it will throw a KeyError if the key is not present in the kwargs.
             # we should only delete it if it's actually present in the kwargs.
             # so we use the pop method instead of the del method.

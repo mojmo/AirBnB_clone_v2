@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-""""""
+"""Defines the Place class as a subclass of BaseModel."""
 from models.base_model import BaseModel
 
 
 class Place(BaseModel):
-    """"""
+    """Represents a place entity."""
 
     city_id = ''
     user_id = ''

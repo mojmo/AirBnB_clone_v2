@@ -1,3 +1,4 @@
+"""Unit tests for the FileStorage class."""
 import unittest
 
 from models.base_model import BaseModel
@@ -5,6 +6,7 @@ from models.engine.file_storage import FileStorage
 
 
 class TestFileStorage(unittest.TestCase):
+    """Contains unit tests for the FileStorage class."""
 
     def test_create_instance(self):
         """
@@ -15,7 +17,8 @@ class TestFileStorage(unittest.TestCase):
 
     def test_add_object(self):
         """
-        Test that a new object can be added to the __objects dictionary using the new method.
+        Test that a new object can be added to the __objects
+        dictionary using the new method.
         """
         file_storage = FileStorage()
         # Use an instance of a class derived from BaseModel
@@ -25,7 +28,8 @@ class TestFileStorage(unittest.TestCase):
 
     def test_reload_objects(self):
         """
-        Test that the __objects dictionary can be reloaded from a file using the reload method.
+        Test that the __objects dictionary can be reloaded from
+        a file using the reload method.
         """
         file_storage = FileStorage()
         obj = BaseModel()

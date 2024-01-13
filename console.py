@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-"""Provides a command-line interface for interacting with
+"""
+Provides a command-line interface for interacting with
 storage and data models.
 """
 import cmd

@@ -1,9 +1,11 @@
+"""Unit tests for the State class."""
 import unittest
 
 from models.state import State
 
 
 class TestState(unittest.TestCase):
+    """Contains unit tests for the State class."""
 
     #  State object can be instantiated with no arguments
     def test_instantiate_with_no_arguments(self):
