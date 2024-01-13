@@ -23,27 +23,23 @@ class HBNBCommand(cmd.Cmd):
     ]
 
     def do_quit(self, arg):
-        """
-        Quit command to exit the program
+        """Quit command to exit the program
         """
         return True
 
-    def do_EOF(self, line):
-        """
-        Signal to exit the command loop.
+    def do_EOF(self, arg):
+        """Signal to exit the command loop.
         """
         print()
         return True
 
     def emptyline(self):
-        """
-        Override the default behavior for an empty line (do nothing).
+        """Override the default behavior for an empty line (do nothing).
         """
         pass
 
     def do_create(self, arg):
-        """
-        Create a new instance of a specified class.
+        """Create a new instance of a specified class.
         """
         arg = arg.strip()
         if len(arg) == 0:
@@ -56,8 +52,7 @@ class HBNBCommand(cmd.Cmd):
             print(new_model.id)
 
     def do_show(self, line):
-        """
-        Display information about a specific instance.
+        """Display information about a specific instance.
         """
         line = line.strip()
         args = line.split(' ')
@@ -74,8 +69,7 @@ class HBNBCommand(cmd.Cmd):
             print(objects_dict[f'{args[0]}.{args[1]}'])
 
     def do_destroy(self, line):
-        """
-        Remove a specified instance.
+        """Remove a specified instance.
         """
         line = line.strip()
         args = line.split(' ')
@@ -93,8 +87,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """
-        List all instances or instances of a specific class.
+        """List all instances or instances of a specific class.
         """
         arg = arg.strip()
         objects_dict = storage.all()
@@ -111,8 +104,7 @@ class HBNBCommand(cmd.Cmd):
             print(cls_objects)
 
     def do_update(self, line):
-        """
-        Update the attributes of a specified instance.
+        """Update the attributes of a specified instance.
         """
         line = line.strip()
         args = line.split(' ')
@@ -142,8 +134,7 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_count(self, line):
-        """
-        Count the number of instances of a specified class.
+        """Count the number of instances of a specified class.
         """
 
         line = line.strip()
@@ -157,8 +148,7 @@ class HBNBCommand(cmd.Cmd):
         print(count)
 
     def default(self, line):
-        """
-        Handle unknown commands based on defined patterns.
+        """Handle unknown commands based on defined patterns.
         """
 
         methods = {

@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-""""""
+"""Provides a simple storage system for managing and persisting
+objects in JSON format."""
 import json
 from models.base_model import BaseModel
 from models.user import User
@@ -11,23 +12,33 @@ from models.review import Review
 
 
 class FileStorage:
-    """"""
+    """Handles the storage and retrieval of objects in JSON format."""
 
     __file_path = 'file.json'
     __objects = {}
 
     def all(self):
-        """"""
+        """
+        Retrieve all stored objects.
+
+        Returns:
+            dict: A dictionary containing all stored objects.
+        """
 
         return FileStorage.__objects
 
     def new(self, obj):
-        """"""
+        """
+        Add a new object to the storage.
+
+        Args:
+            obj: An object to be stored.
+        """
         obj_name = f'{obj.__class__.__name__}.{obj.id}'
         FileStorage.__objects[obj_name] = obj
 
     def save(self):
-        """"""
+        """Save the current state of stored objects to the JSON file."""
 
         obj_dict = {}
         for key, value in FileStorage.__objects.items():
@@ -37,7 +48,7 @@ class FileStorage:
             json.dump(obj_dict, json_file)
 
     def reload(self):
-        """"""
+        """Load objects from the JSON file into the storage dictionary."""
 
         try:
             with open(FileStorage.__file_path) as json_file:
