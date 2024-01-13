@@ -17,6 +17,7 @@ def get_class_name_to_class():
         the corresponding class objects.
     """
     # This function is used to avoid circular import
+    from models.base_model import BaseModel
     from models.user import User
     from models.state import State
     from models.city import City
@@ -25,6 +26,7 @@ def get_class_name_to_class():
     from models.review import Review
 
     return {
+        'BaseModel': BaseModel,
         'User': User,
         'State': State,
         'City': City,
