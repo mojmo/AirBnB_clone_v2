@@ -148,9 +148,12 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 2:
             print("** attribute name missing **")
             return
-        if len(args) == 3 and type(eval(args[2])) != dict:
-            print("** value missing **")
-            return
+        if len(args) == 3:
+            try:
+                type(eval(args[2])) != dict
+            except NameError:
+                print("** value missing **")
+                return
         if len(args) == 4:
             updated_obj = objects_dict[f'{args[0]}.{args[1]}']
             # If the updated argument is new
