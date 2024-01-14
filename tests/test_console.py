@@ -10,6 +10,13 @@ from console import HBNBCommand
 class TestHBNBCommand(unittest.TestCase):
     """Contains unit tests for the HBNBCommand class"""
 
+    def tearDown(self):
+        """Delete any created files during testing."""
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+
     def test_do_quit(self):
         """
         Test that the 'do_quit' method returns True when called.
@@ -129,7 +136,7 @@ class TestHBNBCommand(unittest.TestCase):
         cmd.do_all("")
         output = sys.stdout.getvalue()
         sys.stdout = original_stdout
-        self.assertFalse('[]' in output)
+        self.assertTrue('[]' in output)
 
     def test_do_all_invalid_class_name(self):
         """

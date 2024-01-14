@@ -10,6 +10,13 @@ from models.base_model import BaseModel
 class TestBaseModelInit(unittest.TestCase):
     """Contains unit tests for the BaseModel class."""
 
+    def tearDown(self):
+        """Delete any created files during testing."""
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
+
     def test_base_model_instance_no_arguments(self):
         """
         Test that a BaseModel instance can be created with no arguments
@@ -84,7 +91,6 @@ class TestBaseModelInit(unittest.TestCase):
 class TestBaseModelSave(unittest.TestCase):
     """Contains tests related to the save method of BaseModel instances"""
 
-    @classmethod
     def tearDown(self):
         """Delete any created files during testing."""
         try:
@@ -128,6 +134,13 @@ class TestBaseModelSave(unittest.TestCase):
 
 class TestBaseModelToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of BaseModel instances"""
+
+    def tearDown(self):
+        """Delete any created files during testing."""
+        try:
+            os.remove("file.json")
+        except IOError:
+            pass
 
     def test_to_dict_method(self):
         """Tests the to_dict method of BaseModel instances"""
