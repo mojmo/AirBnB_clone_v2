@@ -45,17 +45,18 @@ class TestFileStorage(unittest.TestCase):
         """Tests that the 'all' method returns a dictionary."""
         all_objects = storage.all()
         self.assertIsInstance(all_objects, dict)
+        self.assertEqual(type(storage.all()), dict)
 
     def test_add_object(self):
         """
         Test that a new object can be added to the __objects
         dictionary using the new method.
         """
-        file_storage = FileStorage()
         # Use an instance of a class derived from BaseModel
         obj = BaseModel()
-        file_storage.new(obj)
-        self.assertIn(obj, file_storage.all().values())
+        storage.new(obj)
+        self.assertIn(obj, storage.all().values())
+        self.assertIn(f"BaseModel.{obj.id}", storage.all().keys())
 
     def test_new_method_and_get_class_method(self):
         """Tests the 'new' method and 'get_class_name_to_class' function."""
@@ -67,6 +68,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"User.{obj.id}", file_storage.all().keys())
 
     def test_new_method_for_state_class(self):
         """Tests the 'new' method for the State class."""
@@ -78,6 +80,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"State.{obj.id}", file_storage.all().keys())
 
     def test_new_method_for_city_class(self):
         """Tests the 'new' method for the City class."""
@@ -89,6 +92,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"City.{obj.id}", file_storage.all().keys())
 
     def test_new_method_for_amenity_class(self):
         """Tests the 'new' method for the Amenity class."""
@@ -100,6 +104,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"Amenity.{obj.id}", file_storage.all().keys())
 
     def test_new_method_for_place_class(self):
         """Tests the 'new' method for the Place class."""
@@ -111,6 +116,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"Place.{obj.id}", file_storage.all().keys())
 
     def test_new_method_for_review_class(self):
         """Tests the 'new' method for the Review class."""
@@ -122,6 +128,7 @@ class TestFileStorage(unittest.TestCase):
         self.assertIn(obj_name, all_objects)
         file_storage = FileStorage()
         self.assertIn(obj, file_storage.all().values())
+        self.assertIn(f"Review.{obj.id}", file_storage.all().keys())
 
     def test_save_method_creates_json_file(self):
         """
