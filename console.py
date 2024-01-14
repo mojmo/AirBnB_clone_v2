@@ -63,7 +63,9 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, arg):
-        """Create a new instance of a specified class.
+        """
+        Create a new instance of a specified class.
+        USAGE: create <class name>
         """
         args = parse_command(arg)
         if len(args) == 0:
@@ -78,7 +80,9 @@ class HBNBCommand(cmd.Cmd):
             print(new_model.id)
 
     def do_show(self, line):
-        """Display information about a specific instance.
+        """
+        Display information about a specific instance.
+        USAGE: show <class name> <id>
         """
         args = parse_command(line)
         objects_dict = storage.all()
@@ -94,7 +98,9 @@ class HBNBCommand(cmd.Cmd):
             print(objects_dict[f'{args[0]}.{args[1]}'])
 
     def do_destroy(self, line):
-        """Remove a specified instance.
+        """
+        Remove a specified instance.
+        USAGE: show <class name> <id>
         """
         args = parse_command(line)
         objects_dict = storage.all()
@@ -111,7 +117,9 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_all(self, arg):
-        """List all instances or instances of a specific class.
+        """
+        List all instances or instances of a specific class.
+        USAGE: all <class name>
         """
         args = parse_command(arg)
         objects_dict = storage.all()
@@ -128,7 +136,9 @@ class HBNBCommand(cmd.Cmd):
             print(cls_objects)
 
     def do_update(self, line):
-        """Update the attributes of a specified instance.
+        """
+        Update the attributes of a specified instance.
+        USAGE: update <class name> <id> <attribute name> "<attribute value>"
         """
         args = parse_command(line)
         objects_dict = storage.all()
@@ -179,7 +189,9 @@ class HBNBCommand(cmd.Cmd):
             storage.save()
 
     def do_count(self, line):
-        """Count the number of instances of a specified class.
+        """
+        Count the number of instances of a specified class.
+        USAGE: count <class name>
         """
         args = parse_command(line)
         objects_dict = storage.all()
