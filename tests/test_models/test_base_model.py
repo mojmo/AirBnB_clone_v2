@@ -66,9 +66,22 @@ class TestBaseModelInit(unittest.TestCase):
                 'created_at': '2024-01-14T12:00:00.000', 'name': 'ALX'}
         obj = BaseModel(**data)
 
-        assert obj.id == '415b1fec-2336-4dfa-8254-3b9006da20f1'
-        assert obj.created_at == datetime(2024, 1, 14, 12, 0, 0)
-        assert obj.name == 'ALX'
+        self.assertEqual(obj.id, '415b1fec-2336-4dfa-8254-3b9006da20f1')
+        self.assertEqual(obj.created_at, datetime(2024, 1, 14, 12, 0, 0))
+        self.assertEqual(obj.name, 'ALX')
+
+    def test_base_model_init_with_kwargs_from_object(self):
+        """
+        Tests initializing a BaseModel instance with kwargs
+        obtained from another BaseModel instance.
+        """
+        my_model = BaseModel()
+        my_model.name = "My_First_Model"
+        my_model.my_number = 89
+        my_model_json = my_model.to_dict()
+        my_new_model = BaseModel(**my_model_json)
+        self.assertEqual(my_model.id, my_new_model.id)
+        self.assertFalse(my_model is my_new_model)
 
     def test_base_moder_not_used_args(self):
         """Tests BaseModel instantiation with unused positional arguments"""
@@ -166,7 +179,7 @@ class TestBaseModelToDict(unittest.TestCase):
     def test_to_dict_method(self):
         """Tests the to_dict method of BaseModel instances"""
         obj = BaseModel()
-        self.assertIsInstance(obj.to_dict(), dict)
+        self.assertEqual(type(obj.to_dict()), dict)
 
     def test_to_dict_contents(self):
         """Tests the contents of the dictionary returned by to_dict"""
