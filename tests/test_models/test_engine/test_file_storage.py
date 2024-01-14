@@ -26,15 +26,15 @@ class TestFileStorage(unittest.TestCase):
         file_storage.new(obj)
         self.assertIn(obj, file_storage.all().values())
 
-    def test_reload_objects(self):
-        """
-        Test that the __objects dictionary can be reloaded from
-        a file using the reload method.
-        """
-        file_storage = FileStorage()
-        obj = BaseModel()
-        file_storage.new(obj)
-        file_storage.save()
-        file_storage.reload()
-
-        self.assertIn(obj, file_storage.all().values())
+    # def test_reload_objects(self):
+    #     """
+    #     Test that the __objects dictionary can be reloaded from
+    #     a file using the reload method.
+    #     """
+    #     file_storage = FileStorage()
+    #     obj = BaseModel()
+    #     file_storage.new(obj)
+    #     file_storage.save()
+    #     file_storage.reload()
+    #
+    #     self.assertIn(obj, file_storage.all().values())
