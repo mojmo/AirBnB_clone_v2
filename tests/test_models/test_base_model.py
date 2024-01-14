@@ -5,6 +5,7 @@ from datetime import datetime
 from time import sleep
 
 from models.base_model import BaseModel
+from models import storage
 
 
 class TestBaseModelInit(unittest.TestCase):
@@ -23,13 +24,33 @@ class TestBaseModelInit(unittest.TestCase):
         """
         base_model = BaseModel()
         self.assertIsInstance(base_model, BaseModel)
+        self.assertEqual(type(BaseModel()), BaseModel)
 
     def test_base_models_args_types(self):
         """Tests the types of attributes after BaseModel instantiation"""
         obj = BaseModel()
         self.assertIsInstance(obj.id, str)
+        self.assertEqual(type(obj.id), str)
         self.assertIsInstance(obj.created_at, datetime)
+        self.assertEqual(type(obj.created_at), datetime)
         self.assertIsInstance(obj.updated_at, datetime)
+        self.assertEqual(type(obj.updated_at), datetime)
+
+    def test_base_model_instance_exist_in_storage(self):
+        """
+        Tests that a BaseModel instance exists in the storage
+        after instantiation.
+        """
+        self.assertIn(BaseModel(), storage.all().values())
+
+    def test_base_model_id(self):
+        """
+        Tests that the 'id' attribute of different BaseModel
+        instances is not equal.
+        """
+        base1 = BaseModel()
+        base2 = BaseModel()
+        self.assertNotEqual(base1.id, base2.id)
 
     def test_base_model_instance_keyword_arguments(self):
         """
