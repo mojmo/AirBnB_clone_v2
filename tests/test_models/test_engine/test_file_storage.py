@@ -19,6 +19,8 @@ class TestFileStorage(unittest.TestCase):
         except IOError:
             pass
 
+        FileStorage._FileStorage__objects = {}
+
     def test_create_instance(self):
         """
         Test that a new instance of FileStorage can be created.
