@@ -559,6 +559,7 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             os.remove("file.json")
         except IOError:
             pass
+        FileStorage.__objects = {}
 
     def test_destroy_class_name_missing(self):
         """Tests behavior when the class name is missing."""
