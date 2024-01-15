@@ -175,17 +175,16 @@ class TestFileStorage(unittest.TestCase):
         place = class_dict['Place']()
         city = class_dict['City']()
         amenity = class_dict['Amenity']()
-        file_storage = FileStorage()
 
-        file_storage.new(base)
-        file_storage.new(user)
-        file_storage.new(state)
-        file_storage.new(review)
-        file_storage.new(place)
-        file_storage.new(city)
-        file_storage.new(amenity)
-        file_storage.save()
-        file_storage.reload()
+        storage.new(base)
+        storage.new(user)
+        storage.new(state)
+        storage.new(review)
+        storage.new(place)
+        storage.new(city)
+        storage.new(amenity)
+        storage.save()
+        storage.reload()
 
         objs = FileStorage._FileStorage__objects
 

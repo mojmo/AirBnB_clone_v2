@@ -135,8 +135,8 @@ class TestBaseModelSave(unittest.TestCase):
     def test_save_method(self):
         """Tests the save method of BaseModel instances"""
         obj = BaseModel()
-        old_updated_at = obj.updated_at
         sleep(0.1)
+        old_updated_at = obj.updated_at
         obj.save()
         self.assertLess(old_updated_at, obj.updated_at)
 
@@ -149,10 +149,11 @@ class TestBaseModelSave(unittest.TestCase):
         sleep(0.1)
         first_updated_at = obj.updated_at
         obj.save()
-        sleep(0.1)
-        obj.save()
         second_updated_at = obj.updated_at
         self.assertLess(first_updated_at, second_updated_at)
+        sleep(0.1)
+        obj.save()
+        self.assertLess(second_updated_at, obj.updated_at)
 
     def test_save_with_arg(self):
         """
