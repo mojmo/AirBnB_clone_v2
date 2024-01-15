@@ -976,7 +976,6 @@ class TestHBNBCommandUpdate(unittest.TestCase):
 
     def test_update_objects_default(self):
         """Tests updating objects using the default syntax."""
-
         with patch("sys.stdout", new=StringIO()) as output:
             HBNBCommand().onecmd("create BaseModel")
             id = output.getvalue().strip()
