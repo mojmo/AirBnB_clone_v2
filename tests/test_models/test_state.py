@@ -10,6 +10,15 @@ from time import sleep
 class TestState(unittest.TestCase):
     """Contains unit tests for the State class."""
 
+    def test_name_class_attribute(self):
+        """
+        Test that the State has a class attribute 'name'
+        """
+        state = State()
+        self.assertEqual(type(State.name), str)
+        self.assertIn("name", dir(state))
+        self.assertNotIn("name", state.__dict__)
+
     #  State object can be instantiated with no arguments
     def test_instantiate_with_no_arguments(self):
         """

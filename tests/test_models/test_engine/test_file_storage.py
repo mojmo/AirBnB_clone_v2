@@ -231,5 +231,11 @@ class TestFileStorage(unittest.TestCase):
         """
         # No exception should be raised,
         # and the method should return without errors
+
+        try:
+            storage.reload()
+        except FileNotFoundError:
+            self.fail()
+
         with patch('builtins.open', side_effect=FileNotFoundError()):
             storage.reload()

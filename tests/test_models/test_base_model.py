@@ -138,7 +138,7 @@ class TestBaseModelSave(unittest.TestCase):
         old_updated_at = obj.updated_at
         sleep(0.1)
         obj.save()
-        self.assertGreater(obj.updated_at, old_updated_at)
+        self.assertLess(old_updated_at, obj.updated_at)
 
     def test_save_two_times(self):
         """
@@ -152,7 +152,7 @@ class TestBaseModelSave(unittest.TestCase):
         sleep(0.1)
         obj.save()
         second_updated_at = obj.updated_at
-        self.assertGreater(second_updated_at, first_updated_at)
+        self.assertLess(first_updated_at, second_updated_at)
 
     def test_save_with_arg(self):
         """
