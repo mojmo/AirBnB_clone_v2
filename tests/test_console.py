@@ -677,7 +677,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"User.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'User.destroy("{id}")'))
+            command = f'User.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -685,7 +686,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"State.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'State.destroy("{id}")'))
+            command = f'State.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -693,7 +695,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"Review.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'Review.destroy("{id}")'))
+            command = f'Review.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -701,7 +704,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"Place.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'Place.destroy("{id}")'))
+            command = f'Place.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -709,7 +713,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"City.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'City.destroy("{id}")'))
+            command = f'City.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
         with patch("sys.stdout", new=StringIO()) as output:
@@ -717,7 +722,8 @@ class TestHBNBCommandDestroy(unittest.TestCase):
             id = output.getvalue().strip()
         with patch("sys.stdout", new=StringIO()) as output:
             obj = storage.all()[f"Amenity.{id}"]
-            self.assertFalse(HBNBCommand().onecmd(f'Amenity.destroy("{id}")'))
+            command = f'Amenity.destroy("{id}")'
+            self.assertFalse(HBNBCommand().onecmd(command))
             self.assertNotIn(obj, storage.all())
 
 
