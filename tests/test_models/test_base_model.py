@@ -155,6 +155,14 @@ class TestBaseModelSave(unittest.TestCase):
         obj.save()
         self.assertLess(second_updated_at, obj.updated_at)
 
+    def test_save_file(self):
+        """Test 'save' method saves an object to a file"""
+        base = BaseModel()
+        base.save()
+        base_id = "BaseModel." + base.id
+        with open("file.json", "r") as json_file:
+            self.assertIn(base_id, json_file.read())
+
     def test_save_with_arg(self):
         """
         Tests calling the save method with an argument
