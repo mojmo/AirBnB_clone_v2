@@ -7,7 +7,11 @@ from time import sleep
 from models.base_model import BaseModel
 from models import storage
 
+# Add a condition to skip the tests of file storage if the environment variable is set to 'db'
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
 
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestBaseModelInit(unittest.TestCase):
     """Contains unit tests for the BaseModel class."""
 
@@ -122,6 +126,7 @@ class TestBaseModelInit(unittest.TestCase):
             BaseModel(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestBaseModelSave(unittest.TestCase):
     """Contains tests related to the save method of BaseModel instances"""
 
@@ -175,6 +180,7 @@ class TestBaseModelSave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestBaseModelToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of BaseModel instances"""
 

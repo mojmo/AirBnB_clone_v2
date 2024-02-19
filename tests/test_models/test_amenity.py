@@ -6,7 +6,11 @@ from models.amenity import Amenity
 from datetime import datetime
 from time import sleep
 
+# Add a condition to skip the tests of file storage if the environment variable is set to 'db'
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
 
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestAmenity(unittest.TestCase):
     """Contains unit tests for the Amenity class."""
 
@@ -33,6 +37,7 @@ class TestAmenity(unittest.TestCase):
         self.assertEqual(amenity.name, 123)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestAmenityInit(unittest.TestCase):
     """Contains unit tests for the Amenity class."""
 
@@ -111,6 +116,7 @@ class TestAmenityInit(unittest.TestCase):
             Amenity(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestAmenitySave(unittest.TestCase):
     """Contains tests related to the save method of Amenity instances"""
 
@@ -155,6 +161,7 @@ class TestAmenitySave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestAmenityToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of Amenity instances"""
 

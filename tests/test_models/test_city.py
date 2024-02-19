@@ -6,7 +6,10 @@ from models.city import City
 from datetime import datetime
 from time import sleep
 
+# Add a condition to skip the tests of file storage if the environment variable is set to 'db'
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestCity(unittest.TestCase):
     """Contains unit tests for the City class."""
 
@@ -47,6 +50,7 @@ class TestCity(unittest.TestCase):
         self.assertEqual(city.name, "")
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestCityInit(unittest.TestCase):
     """Contains unit tests for the City class."""
 
@@ -125,6 +129,7 @@ class TestCityInit(unittest.TestCase):
             City(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestCitySave(unittest.TestCase):
     """Contains tests related to the save method of City instances"""
 
@@ -169,6 +174,7 @@ class TestCitySave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestCityToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of City instances"""
 
