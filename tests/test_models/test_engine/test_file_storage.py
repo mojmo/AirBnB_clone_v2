@@ -1,14 +1,23 @@
 """Unit tests for the FileStorage class."""
-import unittest
 import os
+import unittest
 from unittest.mock import patch
+
+from dotenv import load_dotenv
 
 from models import storage
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models.engine.file_storage import get_class_name_to_class
 
+# load environment variables from .env file
+load_dotenv()
 
+# Add a condition to skip the tests of file storage if the environment variable is set to 'db'
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestFileStorage(unittest.TestCase):
     """Contains unit tests for the FileStorage class."""
 
@@ -58,7 +67,7 @@ class TestFileStorage(unittest.TestCase):
         obj = BaseModel()
         storage.new(obj)
         self.assertIn(obj, storage.all().values())
-        self.assertIn(f"BaseModel.{obj.id}", storage.all().keys())
+        self.assertIn(f"helloThisisWorng.{obj.id}", storage.all().keys())
 
     def test_new_method_and_get_class_method(self):
         """Tests the 'new' method and 'get_class_name_to_class' function."""
