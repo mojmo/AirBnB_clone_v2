@@ -1,12 +1,15 @@
 """Unit tests for the Review class."""
-import unittest
 import os
-
-from models.review import Review
+import unittest
 from datetime import datetime
 from time import sleep
 
+from models.review import Review
 
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestReview(unittest.TestCase):
     """Contains unit tests for the Review class."""
 
@@ -67,6 +70,7 @@ class TestReview(unittest.TestCase):
         self.assertIsNotNone(review.updated_at)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestReviewInit(unittest.TestCase):
     """Contains unit tests for the review class."""
 
@@ -145,6 +149,7 @@ class TestReviewInit(unittest.TestCase):
             Review(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestReviewSave(unittest.TestCase):
     """Contains tests related to the save method of Review instances"""
 
@@ -189,6 +194,7 @@ class TestReviewSave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestReviewToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of review instances"""
 

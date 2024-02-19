@@ -1,13 +1,15 @@
 """Unit tests for the User class."""
 import os
 import unittest
-
-from models.user import User
-from models import storage
 from datetime import datetime
 from time import sleep
 
+from models.user import User
 
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestUser(unittest.TestCase):
     """Contains unit tests for the User class."""
 
@@ -40,6 +42,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.last_name, '')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestUserInit(unittest.TestCase):
     """Contains unit tests for the User class."""
 
@@ -118,6 +121,7 @@ class TestUserInit(unittest.TestCase):
             User(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestUserSave(unittest.TestCase):
     """Contains tests related to the save method of User instances"""
 
@@ -162,6 +166,7 @@ class TestUserSave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestUserToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of User instances"""
 

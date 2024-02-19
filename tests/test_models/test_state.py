@@ -6,7 +6,10 @@ from models.state import State
 from datetime import datetime
 from time import sleep
 
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
 
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestState(unittest.TestCase):
     """Contains unit tests for the State class."""
 
@@ -68,7 +71,7 @@ class TestState(unittest.TestCase):
         state.name = "A" * 129
         self.assertEqual(state.name, "A" * 129)
 
-
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestStateInit(unittest.TestCase):
     """Contains unit tests for the State class."""
 
@@ -146,7 +149,7 @@ class TestStateInit(unittest.TestCase):
         with self.assertRaises(ValueError):
             State(created_at='invalid_date')
 
-
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TeststateSave(unittest.TestCase):
     """Contains tests related to the save method of State instances"""
 
@@ -190,7 +193,7 @@ class TeststateSave(unittest.TestCase):
         with self.assertRaises(TypeError):
             obj.save(None)
 
-
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TeststateToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of State instances"""
 

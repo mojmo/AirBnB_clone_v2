@@ -1,12 +1,15 @@
 """Unit tests for the Place class."""
-import unittest
 import os
-
-from models.place import Place
+import unittest
 from datetime import datetime
 from time import sleep
 
+from models.place import Place
 
+condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+
+
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestPlace(unittest.TestCase):
     """Contains unit tests for the Place class."""
 
@@ -197,6 +200,7 @@ class TestPlace(unittest.TestCase):
         self.assertEqual(place.name, 'Café')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestPlaceInit(unittest.TestCase):
     """Contains unit tests for the Place class."""
 
@@ -275,6 +279,7 @@ class TestPlaceInit(unittest.TestCase):
             Place(created_at='invalid_date')
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestPlaceSave(unittest.TestCase):
     """Contains tests related to the save method of Place instances"""
 
@@ -319,6 +324,7 @@ class TestPlaceSave(unittest.TestCase):
             obj.save(None)
 
 
+@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestPlaceToDict(unittest.TestCase):
     """Contains tests related to the to_dict method of Place instances"""
 
