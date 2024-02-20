@@ -11,20 +11,19 @@ class State(BaseModel, Base):
 
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
-
     cities = relationship("City", backref="state", cascade="all, delete")
 
-    @property
-    def cities(self):
-        """Return a list of City instances associated with this State.
+    if storage_type is not 'db':
+        @property
+        def cities(self):
+            """Return a list of City instances associated with this State.
 
-        Returns:
-            list: A list of City instances that have the same
-            state_id as this State's id.
-        """
-        cities_list = []
-
-        if storage_type is not 'db':
+            Returns:
+                list: A list of City instances that have the same
+                state_id as this State's id.
+            """
+            cities_list = []
+            
             for city in storage.all(City).values():
                 if city.state_id == self.id:
                     cities_list.append(city)
