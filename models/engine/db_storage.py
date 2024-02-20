@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3
+#!/usr/bin/python3
 """Provides a simple storage system for managing and persisting
 objects in a database."""
 from os import getenv
