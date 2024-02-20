@@ -78,23 +78,6 @@ class HBNBCommand(cmd.Cmd):
         """
         return False
 
-    # def do_create(self, arg):
-    #     """
-    #     Create a new instance of a specified class.
-    #     USAGE: create <class name>
-    #     """
-    #     args = parse_command(arg)
-    #     if len(args) == 0:
-    #         print("** class name missing **")
-    #     elif args[0] not in HBNBCommand.defined_classes:
-    #         print("** class doesn't exist **")
-    #     else:
-    #         class_name_to_class = get_class_name_to_class()
-    #         cls = class_name_to_class[args[0]]
-    #         new_model = cls()
-    #         storage.save()
-    #         print(new_model.id)
-
     def do_create(self, arg):
         """
         Create a new instance of a specified class, with optional initialization parameters.
@@ -182,25 +165,6 @@ class HBNBCommand(cmd.Cmd):
         else:
             del objects_dict[f'{args[0]}.{args[1]}']
             storage.save()
-
-    # def do_all(self, arg):
-    #     """
-    #     List all instances or instances of a specific class.
-    #     USAGE: all <class name>
-    #     """
-    #     args = parse_command(arg)
-    #     objects_dict = storage.all()
-    #     objects_list = [f"{val}" for val in objects_dict.values()]
-    #     if len(args) == 0:
-    #         print(objects_list)
-    #     elif args[0] not in HBNBCommand.defined_classes:
-    #         print("** class doesn't exist **")
-    #     else:
-    #         cls_objects = []
-    #         for obj in objects_dict.values():
-    #             if obj.__class__.__name__ == args[0]:
-    #                 cls_objects.append(obj.__str__())
-    #         print(cls_objects)
 
     def do_all(self, arg):
         """Prints string representations of instances"""
