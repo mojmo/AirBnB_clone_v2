@@ -42,13 +42,25 @@ class FileStorage:
     __file_path = 'file.json'
     __objects = {}
 
-    def all(self):
+    def all(self, cls=None):
         """
-        Retrieve all stored objects.
+        Retrieve all stored objects of a specified class or all stored
+        objects if no class is specified.
+
+        Args:
+            cls (Optional[Type]): A class to filter the stored objects by.
 
         Returns:
-            dict: A dictionary containing all stored objects.
+            dict: A dictionary containing all stored objects of the specified
+            class or all stored objects if no class is specified.
         """
+
+        if cls is not None:
+            cls_objects = {}
+            for key, obj in FileStorage.__objects.items():
+                if isinstance(obj, cls):
+                    cls_objects[key] = obj
+            return cls_objects
 
         return FileStorage.__objects
 
@@ -91,3 +103,16 @@ class FileStorage:
 
         except FileNotFoundError:
             return
+
+    def delete(self, obj=None):
+        """
+        Delete a specified object from storage.
+
+        Args:
+            obj (Optional[object]): The object to delete from storage.
+        """
+        if obj is not None:
+            obj_name = f'{obj.__class__.__name__}.{obj.id}'
+            if obj_name in FileStorage.__objects:
+                FileStorage.__objects.pop(obj_name)
+                self.save()
