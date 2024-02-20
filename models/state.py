@@ -13,7 +13,7 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
     cities = relationship("City", backref="state", cascade="all, delete")
 
-    if storage_type is not 'db':
+    if storage_type != 'db':
         @property
         def cities(self):
             """Return a list of City instances associated with this State.
