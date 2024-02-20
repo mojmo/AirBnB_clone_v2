@@ -13,19 +13,7 @@ from models.engine.file_storage import get_class_name_to_class
 import shlex  # for splitting the line along spaces except in double quotes
 from shlex import split
 
-import cmd
 from datetime import datetime
-from models.amenity import Amenity
-from models.base_model import BaseModel
-from models.city import City
-from models.place import Place
-from models.review import Review
-from models.state import State
-from models.user import User
-
-classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
-
 
 def parse_command(command):
 
@@ -95,7 +83,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # Create an instance of the class
-        new_instance = classes[class_name]()
+        new_instance = get_class_name_to_class()[class_name]()
 
         # Iterate over additional arguments to set attributes on the object
         for param in args[1:]:
@@ -172,8 +160,8 @@ class HBNBCommand(cmd.Cmd):
         obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
-        elif args[0] in classes:
-            obj_dict = models.storage.all(classes[args[0]])
+        elif args[0] in get_class_name_to_class():
+            obj_dict = models.storage.all(get_class_name_to_class()[args[0]])
         else:
             print("** class doesn't exist **")
             return False
