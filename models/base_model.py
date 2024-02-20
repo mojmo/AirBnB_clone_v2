@@ -1,13 +1,24 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """Provides a base class for data models with common functionality."""
+import uuid
 from datetime import datetime
-from uuid import uuid4
 
+from sqlalchemy import Column, String, DateTime
+from sqlalchemy.ext.declarative import declarative_base
 import models
+
+if models.storage_type == "db":
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
     """Base class for data models."""
+    if models.storage_type == "db":
+        id = Column(String(60), primary_key=True)
+        created_at = Column(DateTime, default=datetime.utcnow)
+        updated_at = Column(DateTime, default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         """
@@ -33,10 +44,9 @@ class BaseModel:
                 else:
                     setattr(self, key, value)
         else:
-            self.id = str(uuid4())
+            self.id = str(uuid.uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            models.storage.new(self)
 
     def __str__(self):
         """
@@ -52,6 +62,7 @@ class BaseModel:
         the storage save process.
         """
         self.updated_at = datetime.now()
+        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
@@ -61,10 +72,16 @@ class BaseModel:
         Returns:
             dict: Dictionary representation of the object.
         """
-
+        # TODO: This method should be refactored
         new_dict = self.__dict__.copy()
         new_dict['__class__'] = self.__class__.__name__
         new_dict['created_at'] = self.created_at.isoformat()
         new_dict['updated_at'] = self.updated_at.isoformat()
 
         return new_dict
+
+    def delete(self):
+        """
+        Delete the current instance from the storage.
+        """
+        models.storage.delete(self)
