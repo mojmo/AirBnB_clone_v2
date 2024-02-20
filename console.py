@@ -6,9 +6,25 @@ storage and data models.
 import cmd
 import re
 
+import models
 from models import storage
 from models.engine.file_storage import get_class_name_to_class
+
+import shlex  # for splitting the line along spaces except in double quotes
 from shlex import split
+
+import cmd
+from datetime import datetime
+from models.amenity import Amenity
+from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
+from models.user import User
+
+classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
+           "Place": Place, "Review": Review, "State": State, "User": User}
 
 
 def parse_command(command):
@@ -60,24 +76,75 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """Override the default behavior for an empty line (do nothing).
         """
-        pass
+        return False
+
+    # def do_create(self, arg):
+    #     """
+    #     Create a new instance of a specified class.
+    #     USAGE: create <class name>
+    #     """
+    #     args = parse_command(arg)
+    #     if len(args) == 0:
+    #         print("** class name missing **")
+    #     elif args[0] not in HBNBCommand.defined_classes:
+    #         print("** class doesn't exist **")
+    #     else:
+    #         class_name_to_class = get_class_name_to_class()
+    #         cls = class_name_to_class[args[0]]
+    #         new_model = cls()
+    #         storage.save()
+    #         print(new_model.id)
 
     def do_create(self, arg):
         """
-        Create a new instance of a specified class.
-        USAGE: create <class name>
+        Create a new instance of a specified class, with optional initialization parameters.
+        USAGE: create <class name> <param 1> <param 2> <param 3>...
+        Param syntax: <key name>=<value>
         """
-        args = parse_command(arg)
+        args = shlex.split(arg)  # Use shlex.split to correctly handle spaces within quotes
         if len(args) == 0:
             print("** class name missing **")
-        elif args[0] not in HBNBCommand.defined_classes:
+            return
+
+        class_name = args[0]
+        if class_name not in HBNBCommand.defined_classes:
             print("** class doesn't exist **")
-        else:
-            class_name_to_class = get_class_name_to_class()
-            cls = class_name_to_class[args[0]]
-            new_model = cls()
-            storage.save()
-            print(new_model.id)
+            return
+
+        # Create an instance of the class
+        new_instance = classes[class_name]()
+
+        # Iterate over additional arguments to set attributes on the object
+        for param in args[1:]:
+            key, value_str = param.split("=", 1)
+            # Detect and preserve string values correctly
+            if value_str.startswith('"') and value_str.endswith('"'):
+                # Handle strings explicitly, including internal quotes and underscores
+                value = value_str[1:-1].replace('\\"', '"').replace('_', ' ')
+            elif value_str.isdigit() and (key == 'city_id' or key == 'user_id'):
+                # Preserve city_id and user_id as strings explicitly
+                value = value_str
+            elif '.' in value_str:
+                try:
+                    value = float(value_str)
+                except ValueError:
+                    print(f"Error: {value_str} is not a valid float. Skipping...")
+                    continue
+            else:
+                try:
+                    value = int(value_str)
+                except ValueError:
+                    # Treat as a string if it's not a valid number
+                    value = value_str.replace('_', ' ')
+
+            # Set the attribute on the instance
+            setattr(new_instance, key, value)
+
+        storage.new(new_instance)
+        storage.save()
+        print(new_instance.id)
+
+
 
     def do_show(self, line):
         """
@@ -116,24 +183,41 @@ class HBNBCommand(cmd.Cmd):
             del objects_dict[f'{args[0]}.{args[1]}']
             storage.save()
 
+    # def do_all(self, arg):
+    #     """
+    #     List all instances or instances of a specific class.
+    #     USAGE: all <class name>
+    #     """
+    #     args = parse_command(arg)
+    #     objects_dict = storage.all()
+    #     objects_list = [f"{val}" for val in objects_dict.values()]
+    #     if len(args) == 0:
+    #         print(objects_list)
+    #     elif args[0] not in HBNBCommand.defined_classes:
+    #         print("** class doesn't exist **")
+    #     else:
+    #         cls_objects = []
+    #         for obj in objects_dict.values():
+    #             if obj.__class__.__name__ == args[0]:
+    #                 cls_objects.append(obj.__str__())
+    #         print(cls_objects)
+
     def do_all(self, arg):
-        """
-        List all instances or instances of a specific class.
-        USAGE: all <class name>
-        """
-        args = parse_command(arg)
-        objects_dict = storage.all()
-        objects_list = [f"{val}" for val in objects_dict.values()]
+        """Prints string representations of instances"""
+        args = shlex.split(arg)
+        obj_list = []
         if len(args) == 0:
-            print(objects_list)
-        elif args[0] not in HBNBCommand.defined_classes:
-            print("** class doesn't exist **")
+            obj_dict = models.storage.all()
+        elif args[0] in classes:
+            obj_dict = models.storage.all(classes[args[0]])
         else:
-            cls_objects = []
-            for obj in objects_dict.values():
-                if obj.__class__.__name__ == args[0]:
-                    cls_objects.append(obj.__str__())
-            print(cls_objects)
+            print("** class doesn't exist **")
+            return False
+        for key in obj_dict:
+            obj_list.append(str(obj_dict[key]))
+        print("[", end="")
+        print(", ".join(obj_list), end="")
+        print("]")
 
     def do_update(self, line):
         """
