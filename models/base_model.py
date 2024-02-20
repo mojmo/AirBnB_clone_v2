@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """Provides a base class for data models with common functionality."""
 import uuid
 from datetime import datetime
