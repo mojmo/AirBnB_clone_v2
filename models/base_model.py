@@ -7,6 +7,7 @@ from sqlalchemy import Column, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 import models
 
+
 if models.storage_type == "db":
     Base = declarative_base()
 else:
@@ -55,7 +56,7 @@ class BaseModel:
         Returns:
             str: String representation of the object.
         """
-        return f"[{self.__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f"[{self.__class__.__name__}] ({self.id}) {self.to_dict()}"
 
     def save(self):
         """Save the current state of the object and trigger
@@ -66,18 +67,15 @@ class BaseModel:
         models.storage.save()
 
     def to_dict(self):
-        """
-        Convert the object to a dictionary format for storage.
-
-        Returns:
-            dict: Dictionary representation of the object.
-        """
-        # TODO: This method should be refactored
+        """returns a dictionary containing all keys/values of the instance"""
         new_dict = self.__dict__.copy()
-        new_dict['__class__'] = self.__class__.__name__
-        new_dict['created_at'] = self.created_at.isoformat()
-        new_dict['updated_at'] = self.updated_at.isoformat()
-
+        if "created_at" in new_dict:
+            new_dict["created_at"] = new_dict["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        if "updated_at" in new_dict:
+            new_dict["updated_at"] = new_dict["updated_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
+        new_dict["__class__"] = self.__class__.__name__
+        if "_sa_instance_state" in new_dict:
+            del new_dict["_sa_instance_state"]
         return new_dict
 
     def delete(self):
