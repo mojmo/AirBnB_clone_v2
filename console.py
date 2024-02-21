@@ -15,6 +15,7 @@ from shlex import split
 
 from datetime import datetime
 
+
 def parse_command(command):
 
     dict_arg = re.search(r'\{(.*?)\}', command)

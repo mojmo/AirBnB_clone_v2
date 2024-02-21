@@ -86,13 +86,14 @@ class FileStorage:
 
     def reload(self):
         """deserializes the JSON file to __objects"""
-        needed_classes = get_class_name_to_class()
+        needed_clss = get_class_name_to_class()
         try:
             with open(self.__file_path, 'r') as f:
                 json_file = json.load(f)
             for key in json_file:
-                self.__objects[key] = needed_classes[json_file[key]["__class__"]](**json_file[key])
-        except:
+                class_name = json_file[key]["__class__"]
+                self.__objects[key] = needed_clss[class_name](**json_file[key])
+        except FileNotFoundError:
             pass
 
     def delete(self, obj=None):

@@ -29,10 +29,11 @@ class DBStorage:
 
     def all(self, cls=None):
         """query on the current database session"""
+        needed_classes = get_class_name_to_class()
         new_dict = {}
-        for clss in get_class_name_to_class():
-            if cls is None or cls is get_class_name_to_class()[clss] or cls is clss:
-                objs = self.__session.query(get_class_name_to_class()[clss]).all()
+        for clss in needed_classes:
+            if cls is None or cls is needed_classes[clss] or cls is clss:
+                objs = self.__session.query(needed_classes[clss]).all()
                 for obj in objs:
                     key = obj.__class__.__name__ + '.' + obj.id
                     new_dict[key] = obj
