@@ -68,15 +68,12 @@ class BaseModel:
 
     def to_dict(self):
         """returns a dictionary containing all keys/values of the instance"""
-        new_dict = self.__dict__.copy()
-        if "created_at" in new_dict:
-            new_dict["created_at"] = new_dict["created_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
-        if "updated_at" in new_dict:
-            new_dict["updated_at"] = new_dict["updated_at"].strftime("%Y-%m-%dT%H:%M:%S.%f")
-        new_dict["__class__"] = self.__class__.__name__
-        if "_sa_instance_state" in new_dict:
-            del new_dict["_sa_instance_state"]
-        return new_dict
+        return {
+            key: value.strftime("%Y-%m-%dT%H:%M:%S.%f") if key in ["created_at", "updated_at"] else value
+            for key, value in self.__dict__.items()
+            # exclude the key _sa_instance_state from the dictionary
+            if key != "_sa_instance_state"
+        }
 
     def delete(self):
         """
