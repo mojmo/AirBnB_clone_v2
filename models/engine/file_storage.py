@@ -85,24 +85,15 @@ class FileStorage:
             json.dump(obj_dict, json_file)
 
     def reload(self):
-        """Load objects from the JSON file into the storage dictionary."""
-        class_name_to_class = get_class_name_to_class()
-
+        """deserializes the JSON file to __objects"""
+        needed_classes = get_class_name_to_class()
         try:
-            with open(FileStorage.__file_path) as json_file:
-                objects_dict = json.load(json_file)
-
-                for obj in objects_dict.values():
-                    class_name = obj['__class__']
-                    # Use the mapping insted of eval function
-                    # to avoid security issues with eval function
-                    if class_name in class_name_to_class:
-                        cls = class_name_to_class[class_name]
-                        # self.new(eval(class_name)(**obj))
-                        self.new(cls(**obj))
-
-        except FileNotFoundError:
-            return
+            with open(self.__file_path, 'r') as f:
+                json_file = json.load(f)
+            for key in json_file:
+                self.__objects[key] = needed_classes[json_file[key]["__class__"]](**json_file[key])
+        except:
+            pass
 
     def delete(self, obj=None):
         """
