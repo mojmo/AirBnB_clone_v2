@@ -1,30 +1,33 @@
 #!/usr/bin/python3
 """Defines the State class as a subclass of BaseModel."""
-from models.base_model import BaseModel, Base
-from models.city import City
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models import storage, storage_type
+
+import models
+from models.base_model import BaseModel, Base
+from models.city import City
+
 
 class State(BaseModel, Base):
-    """Represents a state entity."""
+    """Representation of state """
+    if models.storage_type == "db":
+        __tablename__ = 'states'
+        name = Column(String(128), nullable=False)
+        cities = relationship("City", backref="state")
+    else:
+        name = ""
 
-    __tablename__ = 'states'
-    name = Column(String(128), nullable=False)
-    cities = relationship("City", backref="state", cascade="all, delete")
+    def __init__(self, *args, **kwargs):
+        """initializes state"""
+        super().__init__(*args, **kwargs)
 
-    if storage_type != 'db':
+    if models.storage_type != "db":
         @property
         def cities(self):
-            """Return a list of City instances associated with this State.
-
-            Returns:
-                list: A list of City instances that have the same
-                state_id as this State's id.
-            """
-            cities_list = []
-            
-            for city in storage.all(City).values():
+            """getter for list of city instances related to the state"""
+            city_list = []
+            all_cities = models.storage.all(City)
+            for city in all_cities.values():
                 if city.state_id == self.id:
-                    cities_list.append(city)
-            return cities_list
+                    city_list.append(city)
+            return city_list
