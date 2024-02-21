@@ -67,55 +67,40 @@ class HBNBCommand(cmd.Cmd):
         return False
 
     def do_create(self, arg):
-        """
-        Create a new instance of a specified class, with optional initialization parameters.
-        USAGE: create <class name> <param 1> <param 2> <param 3>...
-        Param syntax: <key name>=<value>
-        """
-        args = shlex.split(arg)  # Use shlex.split to correctly handle spaces within quotes
-        if len(args) == 0:
+        args = shlex.split(arg)
+        if not args:
             print("** class name missing **")
             return
 
         class_name = args[0]
-        if class_name not in HBNBCommand.defined_classes:
+        if class_name not in self.defined_classes:
             print("** class doesn't exist **")
             return
 
-        # Create an instance of the class
         new_instance = get_class_name_to_class()[class_name]()
 
-        # Iterate over additional arguments to set attributes on the object
         for param in args[1:]:
-            key, value_str = param.split("=", 1)
-            # Detect and preserve string values correctly
-            if value_str.startswith('"') and value_str.endswith('"'):
-                # Handle strings explicitly, including internal quotes and underscores
-                value = value_str[1:-1].replace('\\"', '"').replace('_', ' ')
-            elif value_str.isdigit() and (key == 'city_id' or key == 'user_id'):
-                # Preserve city_id and user_id as strings explicitly
-                value = value_str
-            elif '.' in value_str:
+            key, value = param.split("=", 1)
+            if key == 'email':
+                value = value.strip('"')
+            elif value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('_', ' ').replace('\\"', '"')
+            elif '.' in value:
                 try:
-                    value = float(value_str)
+                    value = float(value)
                 except ValueError:
-                    print(f"Error: {value_str} is not a valid float. Skipping...")
+                    print(f"Error: {value} is not a valid float. Skipping...")
                     continue
             else:
                 try:
-                    value = int(value_str)
+                    value = int(value)
                 except ValueError:
-                    # Treat as a string if it's not a valid number
-                    value = value_str.replace('_', ' ')
+                    value = value.replace('_', ' ')
 
-            # Set the attribute on the instance
             setattr(new_instance, key, value)
-
         storage.new(new_instance)
-        storage.save()
+        new_instance.save()
         print(new_instance.id)
-
-
 
     def do_show(self, line):
         """
