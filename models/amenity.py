@@ -1,13 +1,12 @@
 #!/usr/bin/python3
 """ Defines the Amenity class as a subclass of BaseModel."""
 from sqlalchemy import Column, String
+
 import models
-from models.base_model import BaseModel
+from models.base_model import BaseModel, Base
 
 
-
-
-class Amenity(BaseModel):
+class Amenity(BaseModel, Base):
     """Represents an amenity entity."""
     if models.storage_type == 'db':
         __tablename__ = 'amenities'
