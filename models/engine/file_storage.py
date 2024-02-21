@@ -113,6 +113,5 @@ class FileStorage:
         """
         if obj is not None:
             obj_name = f'{obj.__class__.__name__}.{obj.id}'
-            if obj_name in FileStorage.__objects:
-                FileStorage.__objects.pop(obj_name)
-                self.save()
+            if obj_name in self.__objects:
+                self.__objects.pop(obj_name)
