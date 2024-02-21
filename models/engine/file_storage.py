@@ -57,12 +57,12 @@ class FileStorage:
 
         if cls is not None:
             cls_objects = {}
-            for key, obj in FileStorage.__objects.items():
+            for key, obj in self.__objects.items():
                 if isinstance(obj, cls):
                     cls_objects[key] = obj
             return cls_objects
 
-        return FileStorage.__objects
+        return self.__objects
 
     def new(self, obj):
         """
@@ -113,6 +113,5 @@ class FileStorage:
         """
         if obj is not None:
             obj_name = f'{obj.__class__.__name__}.{obj.id}'
-            if obj_name in FileStorage.__objects:
-                FileStorage.__objects.pop(obj_name)
-                self.save()
+            if obj_name in self.__objects:
+                self.__objects.pop(obj_name)
