@@ -1,200 +1,126 @@
-"""Unit tests for the User class."""
-import os
-import unittest
+#!/usr/bin/python3
+"""
+Contains the TestUserDocs classes
+"""
+
 from datetime import datetime
-from time import sleep
+import inspect
+import models
+from models import user
+from models.base_model import BaseModel
+import pep8
+import unittest
+User = user.User
 
-from models.user import User
 
-condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+class TestUserDocs(unittest.TestCase):
+    """Tests to check the documentation and style of User class"""
+    @classmethod
+    def setUpClass(cls):
+        """Set up for the doc tests"""
+        cls.user_f = inspect.getmembers(User, inspect.isfunction)
+
+    def test_pep8_conformance_user(self):
+        """Test that models/user.py conforms to PEP8."""
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['models/user.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_pep8_conformance_test_user(self):
+        """Test that tests/test_models/test_user.py conforms to PEP8."""
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['tests/test_models/test_user.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_user_module_docstring(self):
+        """Test for the user.py module docstring"""
+        self.assertIsNot(user.__doc__, None,
+                         "user.py needs a docstring")
+        self.assertTrue(len(user.__doc__) >= 1,
+                        "user.py needs a docstring")
+
+    def test_user_class_docstring(self):
+        """Test for the City class docstring"""
+        self.assertIsNot(User.__doc__, None,
+                         "User class needs a docstring")
+        self.assertTrue(len(User.__doc__) >= 1,
+                        "User class needs a docstring")
+
+    def test_user_func_docstrings(self):
+        """Test for the presence of docstrings in User methods"""
+        for func in self.user_f:
+            self.assertIsNot(func[1].__doc__, None,
+                             "{:s} method needs a docstring".format(func[0]))
+            self.assertTrue(len(func[1].__doc__) >= 1,
+                            "{:s} method needs a docstring".format(func[0]))
 
 
-@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestUser(unittest.TestCase):
-    """Contains unit tests for the User class."""
-
-    def test_user_creation_with_valid_details(self):
-        """Test that a User object can be created with valid email,
-         password, first name, and last name"""
-        user = User(email='test@example.com', password='password',
-                    first_name='John', last_name='Doe')
-        self.assertEqual(user.email, 'test@example.com')
-        self.assertEqual(user.password, 'password')
-        self.assertEqual(user.first_name, 'John')
-        self.assertEqual(user.last_name, 'Doe')
-
-    def test_user_update_and_save_to_storage(self):
-        """Test that a User object can be updated and saved to storage"""
-        user = User(email='test@example.com', password='password',
-                    first_name='John', last_name='Doe')
-        user.save()
-        user.first_name = 'Jane'
-        user.save()
-        self.assertEqual(user.first_name, 'Jane')
-
-    def test_user_creation_with_empty_details(self):
-        """Test that a User object can be created with
-        empty email, password, first name, and last name"""
+    """Test the User class"""
+    def test_is_subclass(self):
+        """Test that User is a subclass of BaseModel"""
         user = User()
-        self.assertEqual(user.email, '')
-        self.assertEqual(user.password, '')
-        self.assertEqual(user.first_name, '')
-        self.assertEqual(user.last_name, '')
+        self.assertIsInstance(user, BaseModel)
+        self.assertTrue(hasattr(user, "id"))
+        self.assertTrue(hasattr(user, "created_at"))
+        self.assertTrue(hasattr(user, "updated_at"))
 
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestUserInit(unittest.TestCase):
-    """Contains unit tests for the User class."""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_user_instance_no_arguments(self):
-        """
-        Test that a User instance can be created with no arguments
-        """
+    def test_email_attr(self):
+        """Test that User has attr email, and it's an empty string"""
         user = User()
-        self.assertIsInstance(user, User)
+        self.assertTrue(hasattr(user, "email"))
+        if models.storage_type == 'db':
+            self.assertEqual(user.email, None)
+        else:
+            self.assertEqual(user.email, "")
 
-    def test_user_args_types(self):
-        """Tests the types of attributes after User instantiation"""
-        obj = User()
-        self.assertIsInstance(obj.id, str)
-        self.assertIsInstance(obj.created_at, datetime)
-        self.assertIsInstance(obj.updated_at, datetime)
+    def test_password_attr(self):
+        """Test that User has attr password, and it's an empty string"""
+        user = User()
+        self.assertTrue(hasattr(user, "password"))
+        if models.storage_type == 'db':
+            self.assertEqual(user.password, None)
+        else:
+            self.assertEqual(user.password, "")
 
-    def test_user_instance_keyword_arguments(self):
-        """
-        Test that a User instance can be created with keyword arguments
-        """
-        user = User(created_at='2022-01-01T00:00:00.000')
-        self.assertIsInstance(user, User)
-        self.assertEqual(user.created_at, datetime(2022, 1, 1, 0, 0, 0))
+    def test_first_name_attr(self):
+        """Test that User has attr first_name, and it's an empty string"""
+        user = User()
+        self.assertTrue(hasattr(user, "first_name"))
+        if models.storage_type == 'db':
+            self.assertEqual(user.first_name, None)
+        else:
+            self.assertEqual(user.first_name, "")
 
-    def test_user_init_with_kwargs(self):
-        """Tests User initialization with keyword arguments"""
-        data = {'id': '415b1fec-2336-4dfa-8254-3b9006da20f1',
-                'created_at': '2024-01-14T12:00:00.000'}
-        obj = User(**data)
+    def test_last_name_attr(self):
+        """Test that User has attr last_name, and it's an empty string"""
+        user = User()
+        self.assertTrue(hasattr(user, "last_name"))
+        if models.storage_type == 'db':
+            self.assertEqual(user.last_name, None)
+        else:
+            self.assertEqual(user.last_name, "")
 
-        self.assertEqual(obj.id, '415b1fec-2336-4dfa-8254-3b9006da20f1')
-        self.assertEqual(obj.created_at, datetime(2024, 1, 14, 12, 0, 0))
+    def test_to_dict_creates_dict(self):
+        """test to_dict method creates a dictionary with proper attrs"""
+        u = User()
+        new_d = u.to_dict()
+        self.assertEqual(type(new_d), dict)
+        self.assertFalse("_sa_instance_state" in new_d)
+        for attr in u.__dict__:
+            if attr is not "_sa_instance_state":
+                self.assertTrue(attr in new_d)
+        self.assertTrue("__class__" in new_d)
 
-    def test_base_moder_not_used_args(self):
-        """Tests User instantiation with unused positional arguments"""
-        user = User("415b1fec-2336-4dfa-8254-3b9006da20e3")
-
-        self.assertIsInstance(user, User)
-        self.assertNotEqual(user.id,
-                            "415b1fec-2336-4dfa-8254-3b9006da20e3")
-
-    def test_user_with_None(self):
-        """Tests User instantiation with None as an argument"""
-        user = User(None)
-        self.assertIsInstance(user, User)
-
-    def test_user_str(self):
-        """Tests the string representation of User instances"""
-
-        obj = User()
-        obj.id = "415swfec-4536-4dfa-8254-3b9006da20fa"
-        date = datetime.now()
-        obj.created_at = obj.updated_at = date
-        output = str(obj)
-
-        self.assertIn("[User] (415swfec-4536-4dfa-8254-3b9006da20fa)",
-                      output)
-        self.assertIn("'id': '415swfec-4536-4dfa-8254-3b9006da20fa'", output)
-        self.assertIn(f"'created_at': {repr(date)}", output)
-        self.assertIn(f"'updated_at': {repr(date)}", output)
-
-    def test_user_instance_invalid_created_at(self):
-        """
-        Test that a User instance cannot be created with an
-        invalid created_at
-        """
-        with self.assertRaises(ValueError):
-            User(created_at='invalid_date')
-
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestUserSave(unittest.TestCase):
-    """Contains tests related to the save method of User instances"""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_save_method(self):
-        """Tests the save method of User instances"""
-        obj = User()
-        old_updated_at = obj.updated_at
-        sleep(0.1)
-        obj.save()
-        self.assertGreater(obj.updated_at, old_updated_at)
-
-    def test_save_two_times(self):
-        """
-        Tests calling the save method twice and checking
-        if updated_at is greater the second time
-        """
-        obj = User()
-        sleep(0.1)
-        first_updated_at = obj.updated_at
-        obj.save()
-        sleep(0.1)
-        obj.save()
-        second_updated_at = obj.updated_at
-        self.assertGreater(second_updated_at, first_updated_at)
-
-    def test_save_with_arg(self):
-        """
-        Tests calling the save method with an argument
-        (expects a TypeError).
-        """
-        obj = User()
-        old_updated_at = obj.updated_at
-        sleep(0.1)
-        with self.assertRaises(TypeError):
-            obj.save(None)
-
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestUserToDict(unittest.TestCase):
-    """Contains tests related to the to_dict method of User instances"""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_to_dict_method(self):
-        """Tests the to_dict method of User instances"""
-        obj = User()
-        self.assertIsInstance(obj.to_dict(), dict)
-
-    def test_to_dict_contents(self):
-        """Tests the contents of the dictionary returned by to_dict"""
-        obj = User()
-        obj.id = "99283s39sn2v"
-        new_dict = obj.to_dict()
-        self.assertEqual(new_dict['id'], "99283s39sn2v")
-        self.assertEqual(new_dict['__class__'], "User")
-
-    def test_to_dict_with_arg(self):
-        """
-        Tests calling the to_dict method with an argument
-        (expects a TypeError)
-        """
-        obj = User()
-        with self.assertRaises(TypeError):
-            obj.to_dict(None)
+    def test_to_dict_values(self):
+        """test that values in dict returned from to_dict are correct"""
+        t_format = "%Y-%m-%dT%H:%M:%S.%f"
+        u = User()
+        new_d = u.to_dict()
+        self.assertEqual(new_d["__class__"], "User")
+        self.assertEqual(type(new_d["created_at"]), str)
+        self.assertEqual(type(new_d["updated_at"]), str)
+        self.assertEqual(new_d["created_at"], u.created_at.strftime(t_format))
+        self.assertEqual(new_d["updated_at"], u.updated_at.strftime(t_format))
