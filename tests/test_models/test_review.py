@@ -1,228 +1,117 @@
-"""Unit tests for the Review class."""
-import os
-import unittest
+#!/usr/bin/python3
+"""
+Contains the TestReviewDocs classes
+"""
+
 from datetime import datetime
-from time import sleep
+import inspect
+import models
+from models import review
+from models.base_model import BaseModel
+import pep8
+import unittest
+Review = review.Review
 
-from models.review import Review
 
-condition = os.getenv('HBNB_TYPE_STORAGE') != 'db'
+class TestReviewDocs(unittest.TestCase):
+    """Tests to check the documentation and style of Review class"""
+    @classmethod
+    def setUpClass(cls):
+        """Set up for the doc tests"""
+        cls.review_f = inspect.getmembers(Review, inspect.isfunction)
+
+    def test_pep8_conformance_review(self):
+        """Test that models/review.py conforms to PEP8."""
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['models/review.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_pep8_conformance_test_review(self):
+        """Test that tests/test_models/test_review.py conforms to PEP8."""
+        pep8s = pep8.StyleGuide(quiet=True)
+        result = pep8s.check_files(['tests/test_models/test_review.py'])
+        self.assertEqual(result.total_errors, 0,
+                         "Found code style errors (and warnings).")
+
+    def test_review_module_docstring(self):
+        """Test for the review.py module docstring"""
+        self.assertIsNot(review.__doc__, None,
+                         "review.py needs a docstring")
+        self.assertTrue(len(review.__doc__) >= 1,
+                        "review.py needs a docstring")
+
+    def test_review_class_docstring(self):
+        """Test for the Review class docstring"""
+        self.assertIsNot(Review.__doc__, None,
+                         "Review class needs a docstring")
+        self.assertTrue(len(Review.__doc__) >= 1,
+                        "Review class needs a docstring")
+
+    def test_review_func_docstrings(self):
+        """Test for the presence of docstrings in Review methods"""
+        for func in self.review_f:
+            self.assertIsNot(func[1].__doc__, None,
+                             "{:s} method needs a docstring".format(func[0]))
+            self.assertTrue(len(func[1].__doc__) >= 1,
+                            "{:s} method needs a docstring".format(func[0]))
 
 
-@unittest.skipIf(condition, "Reason for skipping the tests")
 class TestReview(unittest.TestCase):
-    """Contains unit tests for the Review class."""
-
-    def test_create_review_with_required_attributes(self):
-        """test_create_review_with_required_attributes tests that when a"""
+    """Test the Review class"""
+    def test_is_subclass(self):
+        """Test if Review is a subclass of BaseModel"""
         review = Review()
-        self.assertIsInstance(review, Review)
-        self.assertEqual(review.place_id, '')
-        self.assertEqual(review.user_id, '')
-        self.assertEqual(review.text, '')
+        self.assertIsInstance(review, BaseModel)
+        self.assertTrue(hasattr(review, "id"))
+        self.assertTrue(hasattr(review, "created_at"))
+        self.assertTrue(hasattr(review, "updated_at"))
 
-    def test_create_review_with_all_attributes(self):
-        """test_create_review_with_all_attributes tests that when a Review"""
-        review = Review(place_id='123', user_id='456', text='test')
-        self.assertIsInstance(review, Review)
-        self.assertEqual(review.place_id, '123')
-        self.assertEqual(review.user_id, '456')
-        self.assertEqual(review.text, 'test')
-
-    #  Review instance can be saved successfully
-    def test_save_review_successfully(self):
-        """
-        test_save_review_successfully tests that when
-        a Review instance is
-        """
+    def test_place_id_attr(self):
+        """Test Review has attr place_id, and it's an empty string"""
         review = Review()
-        review.save()
-        self.assertIsNotNone(review.updated_at)
+        self.assertTrue(hasattr(review, "place_id"))
+        if models.storage_type == 'db':
+            self.assertEqual(review.place_id, None)
+        else:
+            self.assertEqual(review.place_id, "")
 
-    def test_create_review_with_empty_attributes(self):
-        """test_create_review_with_empty_attributes tests that when a"""
-        review = Review(place_id='', user_id='', text='')
-        self.assertIsInstance(review, Review)
-        self.assertEqual(review.place_id, '')
-        self.assertEqual(review.user_id, '')
-        self.assertEqual(review.text, '')
-
-    def test_create_review_with_non_string_attributes(self):
-        """test_create_review_with_non_string_attributes tests that when a"""
-        review = Review(place_id=123, user_id=456, text=789)
-        self.assertIsInstance(review, Review)
-        self.assertNotEqual(review.place_id, '123')
-        self.assertNotEqual(review.user_id, '456')
-        self.assertNotEqual(review.text, '789')
-
-    def test_create_review_with_non_existent_attributes(self):
-        """test_create_review_with_non_existent_attributes tests that when a"""
+    def test_user_id_attr(self):
+        """Test Review has attr user_id, and it's an empty string"""
         review = Review()
-        self.assertIsInstance(review, Review)
-        self.assertFalse(hasattr(review, 'non_existent_attr'))
+        self.assertTrue(hasattr(review, "user_id"))
+        if models.storage_type == 'db':
+            self.assertEqual(review.user_id, None)
+        else:
+            self.assertEqual(review.user_id, "")
 
-    def test_create_review_with_invalid_dates(self):
-        """test_create_review_with_invalid_dates tests that when a Review"""
-        review = Review(created_at='2021-01-01T00:00:00.000000',
-                        updated_at='2022-01-01T00:00:00.000000')
-        self.assertIsInstance(review, Review)
-        self.assertIsNotNone(review.created_at)
-        self.assertIsNotNone(review.updated_at)
-
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestReviewInit(unittest.TestCase):
-    """Contains unit tests for the review class."""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_review_instance_no_arguments(self):
-        """
-        Test that a review instance can be created with no arguments
-        """
+    def test_text_attr(self):
+        """Test Review has attr text, and it's an empty string"""
         review = Review()
-        self.assertIsInstance(review, Review)
+        self.assertTrue(hasattr(review, "text"))
+        if models.storage_type == 'db':
+            self.assertEqual(review.text, None)
+        else:
+            self.assertEqual(review.text, "")
 
-    def test_review_args_types(self):
-        """Tests the types of attributes after Review instantiation"""
-        obj = Review()
-        self.assertIsInstance(obj.id, str)
-        self.assertIsInstance(obj.created_at, datetime)
-        self.assertIsInstance(obj.updated_at, datetime)
+    def test_to_dict_creates_dict(self):
+        """test to_dict method creates a dictionary with proper attrs"""
+        r = Review()
+        new_d = r.to_dict()
+        self.assertEqual(type(new_d), dict)
+        self.assertFalse("_sa_instance_state" in new_d)
+        for attr in r.__dict__:
+            if attr is not "_sa_instance_state":
+                self.assertTrue(attr in new_d)
+        self.assertTrue("__class__" in new_d)
 
-    def test_review_instance_keyword_arguments(self):
-        """
-        Test that a Review instance can be created with keyword arguments
-        """
-        review = Review(created_at='2022-01-01T00:00:00.000')
-        self.assertIsInstance(review, Review)
-        self.assertEqual(review.created_at, datetime(2022, 1, 1, 0, 0, 0))
-
-    def test_review_init_with_kwargs(self):
-        """Tests review initialization with keyword arguments"""
-        data = {'id': '415b1fec-2336-4dfa-8254-3b9006da20f1',
-                'created_at': '2024-01-14T12:00:00.000'}
-        obj = Review(**data)
-
-        self.assertEqual(obj.id, '415b1fec-2336-4dfa-8254-3b9006da20f1')
-        self.assertEqual(obj.created_at, datetime(2024, 1, 14, 12, 0, 0))
-
-    def test_base_moder_not_used_args(self):
-        """Tests Review instantiation with unused positional arguments"""
-        review = Review("415b1fec-2336-4dfa-8254-3b9006da20e3")
-
-        self.assertIsInstance(review, Review)
-        self.assertNotEqual(review.id,
-                            "415b1fec-2336-4dfa-8254-3b9006da20e3")
-
-    def test_review_with_None(self):
-        """Tests Review instantiation with None as an argument"""
-        review = Review(None)
-        self.assertIsInstance(review, Review)
-
-    def test_review_str(self):
-        """Tests the string representation of Review instances"""
-
-        obj = Review()
-        obj.id = "415swfec-4536-4dfa-8254-3b9006da20fa"
-        date = datetime.now()
-        obj.created_at = obj.updated_at = date
-        output = str(obj)
-
-        self.assertIn("[Review] (415swfec-4536-4dfa-8254-3b9006da20fa)",
-                      output)
-        self.assertIn("'id': '415swfec-4536-4dfa-8254-3b9006da20fa'", output)
-        self.assertIn(f"'created_at': {repr(date)}", output)
-        self.assertIn(f"'updated_at': {repr(date)}", output)
-
-    def test_review_instance_invalid_created_at(self):
-        """
-        Test that a Review instance cannot be created with an
-        invalid created_at
-        """
-        with self.assertRaises(ValueError):
-            Review(created_at='invalid_date')
-
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestReviewSave(unittest.TestCase):
-    """Contains tests related to the save method of Review instances"""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_save_method(self):
-        """Tests the save method of Review instances"""
-        obj = Review()
-        old_updated_at = obj.updated_at
-        sleep(0.1)
-        obj.save()
-        self.assertGreater(obj.updated_at, old_updated_at)
-
-    def test_save_two_times(self):
-        """
-        Tests calling the save method twice and checking
-        if updated_at is greater the second time
-        """
-        obj = Review()
-        sleep(0.1)
-        first_updated_at = obj.updated_at
-        obj.save()
-        sleep(0.1)
-        obj.save()
-        second_updated_at = obj.updated_at
-        self.assertGreater(second_updated_at, first_updated_at)
-
-    def test_save_with_arg(self):
-        """
-        Tests calling the save method with an argument
-        (expects a TypeError).
-        """
-        obj = Review()
-        old_updated_at = obj.updated_at
-        sleep(0.1)
-        with self.assertRaises(TypeError):
-            obj.save(None)
-
-
-@unittest.skipIf(condition, "Reason for skipping the tests")
-class TestReviewToDict(unittest.TestCase):
-    """Contains tests related to the to_dict method of review instances"""
-
-    def tearDown(self):
-        """Delete any created files during testing."""
-        try:
-            os.remove("file.json")
-        except IOError:
-            pass
-
-    def test_to_dict_method(self):
-        """Tests the to_dict method of Review instances"""
-        obj = Review()
-        self.assertIsInstance(obj.to_dict(), dict)
-
-    def test_to_dict_contents(self):
-        """Tests the contents of the dictionary returned by to_dict"""
-        obj = Review()
-        obj.id = "99283s39sn2v"
-        new_dict = obj.to_dict()
-        self.assertEqual(new_dict['id'], "99283s39sn2v")
-        self.assertEqual(new_dict['__class__'], "Review")
-
-    def test_to_dict_with_arg(self):
-        """
-        Tests calling the to_dict method with an argument
-        (expects a TypeError)
-        """
-        obj = Review()
-        with self.assertRaises(TypeError):
-            obj.to_dict(None)
+    def test_to_dict_values(self):
+        """test that values in dict returned from to_dict are correct"""
+        t_format = "%Y-%m-%dT%H:%M:%S.%f"
+        r = Review()
+        new_d = r.to_dict()
+        self.assertEqual(new_d["__class__"], "Review")
+        self.assertEqual(type(new_d["created_at"]), str)
+        self.assertEqual(type(new_d["updated_at"]), str)
+        self.assertEqual(new_d["created_at"], r.created_at.strftime(t_format))
+        self.assertEqual(new_d["updated_at"], r.updated_at.strftime(t_format))
