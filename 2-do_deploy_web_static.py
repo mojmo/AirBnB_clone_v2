@@ -61,6 +61,9 @@ def do_deploy(archive_path):
     if run(command).failed is True:
         return False
 
+    if run(f"rm -rf {archive_path_server}web_static").failed is True:
+        return False
+
     # Delete the symbolic link /data/web_static/current from the web server
     if run("rm -rf /data/web_static/current").failed is True:
         return False
