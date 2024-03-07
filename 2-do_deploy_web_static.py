@@ -9,8 +9,12 @@ in the versions directory and follows the naming convention
 
 import os
 from fabric.api import *
-from fabric.operations import local, put, run
+from fabric.operations import *
 from datetime import datetime
+
+
+env.user = "ubuntu"
+env.hosts = ['3.83.253.65', '3.84.239.237']
 
 
 def do_pack():
@@ -57,7 +61,7 @@ def do_deploy(archive_path):
     if not os.path.exists(archive_path):
         return False
 
-    env.hosts = ['3.83.253.65', '3.84.239.237']
+    # env.hosts = ['3.83.253.65', '3.84.239.237']
     archive_file = archive_path.split("/")[-1].split(".")[0]
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
@@ -73,6 +77,8 @@ def do_deploy(archive_path):
 
     # Delete the archive from the web server
     run(f"rm /tmp/{archive_file}.tgz")
+
+    run(f"mv {archive_path_server}web_static/* {archive_path_server}")
 
     # Delete the symbolic link /data/web_static/current from the web server
     run("rm -rf /data/web_static/current")
