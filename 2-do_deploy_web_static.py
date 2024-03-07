@@ -32,7 +32,7 @@ def do_deploy(archive_path):
 
     if os.path.exists(archive_path) is False:
         return False
-    
+
     archive_file = archive_path.split("/")[-1].split(".")[0]
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
@@ -50,7 +50,7 @@ def do_deploy(archive_path):
         # Delete the archive from the web server
         run("rm /tmp/{}.tgz".format(archive_file))
 
-        run("mv {}web_static/* {}".format(archive_path_server, archive_path_server))
+        run("rsync -a {}web_static/* {}".format(archive_path_server, archive_path_server))
 
         run("rm -rf {}web_static".format(archive_path_server))
 
