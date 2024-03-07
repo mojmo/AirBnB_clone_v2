@@ -33,26 +33,26 @@ def do_deploy(archive_path):
     if os.path.exists(archive_path) is False:
         return False
 
-    archive_file = archive_path.split("/")[-1].split(".")[0]
-    archive_path_server = f"/data/web_static/releases/{archive_file}/"
+    arch_file = archive_path.split("/")[-1].split(".")[0]
+    arch_path_s = f"/data/web_static/releases/{arch_file}/"
 
     try:
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
 
-        run("mkdir -p {}".format(archive_path_server))
+        run("mkdir -p {}".format(arch_path_s))
 
         # Uncompress the archive to the folder
         # /data/web_static/releases/<archive filename without extension>
         # on the web server
-        run("tar -xzf /tmp/{}.tgz -C {}".format(archive_file, archive_path_server))
+        run("tar -xzf /tmp/{}.tgz -C {}".format(arch_file, arch_path_s))
 
         # Delete the archive from the web server
-        run("rm /tmp/{}.tgz".format(archive_file))
+        run("rm /tmp/{}.tgz".format(arch_file))
 
-        run("rsync -a {}web_static/* {}".format(archive_path_server, archive_path_server))
+        run("rsync -a {}web_static/* {}".format(arch_path_s, arch_path_s))
 
-        run("rm -rf {}web_static".format(archive_path_server))
+        run("rm -rf {}web_static".format(arch_path_s))
 
         # Delete the symbolic link /data/web_static/current from the web server
         run("rm -rf /data/web_static/current")
@@ -60,7 +60,7 @@ def do_deploy(archive_path):
         # Create a new the symbolic link /data/web_static/current on the
         # web server, linked to the new version of the code
         # /data/web_static/releases/<archive filename without extension>
-        run("ln -s {} /data/web_static/current".format(archive_path_server))
+        run("ln -s {} /data/web_static/current".format(arch_path_s))
         return True
-    except:
+    except Exception:
         return False
