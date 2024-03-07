@@ -58,7 +58,7 @@ def do_deploy(archive_path):
     if run(f"rm /tmp/{archive_file}.tgz").failed is True:
         return False
 
-    command = f"rsync -a {archive_path_server}web_static/ {archive_path_server}"
+    command = f"rsync -a {archive_path_server}web_static/* {archive_path_server}"
     if run(command).failed is True:
         return False
 
