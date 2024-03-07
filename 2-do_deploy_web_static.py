@@ -8,8 +8,7 @@ in the versions directory and follows the naming convention
 """
 
 import os
-from fabric.api import *
-from fabric.operations import *
+from fabric.api import env, put, run
 
 
 env.hosts = ['3.83.253.65', '3.84.239.237']
@@ -31,7 +30,7 @@ def do_deploy(archive_path):
         False otherwise.
     """
 
-    if os.path.isfile(archive_path) is False:
+    if os.path.exists(archive_path) is False:
         return False
 
     archive_file = archive_path.split("/")[-1].split(".")[0]
