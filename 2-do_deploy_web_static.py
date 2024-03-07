@@ -16,31 +16,6 @@ from datetime import datetime
 env.hosts = ['3.83.253.65', '3.84.239.237']
 
 
-def do_pack():
-    """Creates a compressed archive of the web_static folder.
-
-    This function creates a compressed archive (.tgz) containing the contents
-    of the web_static folder. The archive is stored in the versions directory
-    and follows the naming convention
-    'web_static_<year><month><day><hour><minute><second>.tgz'.
-
-    Returns:
-        str or None: The file path of the generated archive if successful. None
-        if the archive creation failed.
-    """
-
-    date = datetime.now().strftime("%Y%m%d%H%M%S")
-    file_path = f"versions/web_static_{date}.tgz"
-
-    local("mkdir -p versions")
-    local(f"tar -cvzf {file_path} web_static")
-
-    if os.path.exists(file_path):
-        return file_path
-    else:
-        return None
-
-
 def do_deploy(archive_path):
     """Deploys a compressed archive of the web_static
     folder to multiple servers.
@@ -57,7 +32,7 @@ def do_deploy(archive_path):
         False otherwise.
     """
 
-    if not os.path.exists(archive_path):
+    if os.path.isfile(archive_path) is False:
         return False
 
     # env.hosts = ['3.83.253.65', '3.84.239.237']
