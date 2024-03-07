@@ -32,12 +32,11 @@ def do_deploy(archive_path):
 
     if os.path.exists(archive_path) is False:
         return False
-
+    
     archive_file = archive_path.split("/")[-1].split(".")[0]
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
     try:
-
         # Upload the archive to the /tmp/ directory of the web server
         put(archive_path, "/tmp/")
 
@@ -46,14 +45,12 @@ def do_deploy(archive_path):
         # Uncompress the archive to the folder
         # /data/web_static/releases/<archive filename without extension>
         # on the web server
-        command = "tar -xzf /tmp/{}.tgz -C {}".format(archive_file, archive_path_server)
-        run(command)
+        run("tar -xzf /tmp/{}.tgz -C {}".format(archive_file, archive_path_server))
 
         # Delete the archive from the web server
         run("rm /tmp/{}.tgz".format(archive_file))
 
-        command = "mv {}web_static/* {}".format(archive_path_server, archive_path_server)
-        run(command)
+        run("mv {}web_static/* {}".format(archive_path_server, archive_path_server))
 
         run("rm -rf {}web_static".format(archive_path_server))
 
@@ -63,8 +60,7 @@ def do_deploy(archive_path):
         # Create a new the symbolic link /data/web_static/current on the
         # web server, linked to the new version of the code
         # /data/web_static/releases/<archive filename without extension>
-        command = "ln -s {} /data/web_static/current".format(archive_path_server)
-        run(command)
+        run("ln -s {} /data/web_static/current".format(archive_path_server))
         return True
     except:
         return False
