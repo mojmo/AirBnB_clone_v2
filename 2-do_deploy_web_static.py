@@ -13,7 +13,6 @@ from fabric.operations import *
 from datetime import datetime
 
 
-env.user = "ubuntu"
 env.hosts = ['3.83.253.65', '3.84.239.237']
 
 
@@ -66,26 +65,36 @@ def do_deploy(archive_path):
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
     # Upload the archive to the /tmp/ directory of the web server
-    put(archive_path, "/tmp/")
+    if put(archive_path, "/tmp/").failed is True:
+        return False
 
-    run(f"mkdir -p {archive_path_server}")
+    if run(f"mkdir -p {archive_path_server}").failed is True:
+        return False
 
     # Uncompress the archive to the folder
     # /data/web_static/releases/<archive filename without extension>
     # on the web server
-    run(f"tar -xzf /tmp/{archive_file}.tgz -C {archive_path_server}")
+    command = f"tar -xzf /tmp/{archive_file}.tgz -C {archive_path_server}"
+    if run(command).failed is True:
+        return False
 
     # Delete the archive from the web server
-    run(f"rm /tmp/{archive_file}.tgz")
+    if run(f"rm /tmp/{archive_file}.tgz").failed is True:
+        return False
 
-    run(f"mv {archive_path_server}web_static/* {archive_path_server}")
+    command = f"mv {archive_path_server}web_static/* {archive_path_server}"
+    if run(command).failed is True:
+        return False
 
     # Delete the symbolic link /data/web_static/current from the web server
-    run("rm -rf /data/web_static/current")
+    if run("rm -rf /data/web_static/current").failed is True:
+        return False
 
     # Create a new the symbolic link /data/web_static/current on the
     # web server, linked to the new version of the code
     # /data/web_static/releases/<archive filename without extension>
-    run(f"ln -s {archive_path_server} /data/web_static/current")
+    command = f"ln -s {archive_path_server} /data/web_static/current"
+    if run(command).failed is True:
+        False
 
     return True
