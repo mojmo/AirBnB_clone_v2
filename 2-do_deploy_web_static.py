@@ -74,6 +74,6 @@ def do_deploy(archive_path):
     # /data/web_static/releases/<archive filename without extension>
     command = f"ln -s {archive_path_server} /data/web_static/current"
     if run(command).failed is True:
-        False
+        return False
 
     return True
