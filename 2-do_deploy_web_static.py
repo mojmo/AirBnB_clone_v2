@@ -37,43 +37,35 @@ def do_deploy(archive_path):
     archive_file = archive_path.split("/")[-1].split(".")[0]
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
-    # Upload the archive to the /tmp/ directory of the web server
-    if put(archive_path, f"/tmp/{archive_file}.tgz").failed is True:
-        return False
+    try:
 
-    if run(f"rm -rf {archive_path_server}").failed is True:
-        return False
+        # Upload the archive to the /tmp/ directory of the web server
+        put(archive_path, "/tmp/")
 
-    if run(f"mkdir -p {archive_path_server}").failed is True:
-        return False
+        run("mkdir -p {}".format(archive_path_server))
 
-    # Uncompress the archive to the folder
-    # /data/web_static/releases/<archive filename without extension>
-    # on the web server
-    command = f"tar -xzf /tmp/{archive_file}.tgz -C {archive_path_server}"
-    if run(command).failed is True:
-        return False
+        # Uncompress the archive to the folder
+        # /data/web_static/releases/<archive filename without extension>
+        # on the web server
+        command = "tar -xzf /tmp/{}.tgz -C {}".format(archive_file, archive_path_server)
+        run(command)
 
-    # Delete the archive from the web server
-    if run(f"rm /tmp/{archive_file}.tgz").failed is True:
-        return False
+        # Delete the archive from the web server
+        run("rm /tmp/{}.tgz".format(archive_file))
 
-    command = f"mv {archive_path_server}web_static/* {archive_path_server}"
-    if run(command).failed is True:
-        return False
+        command = "mv {}web_static/* {}".format(archive_path_server, archive_path_server)
+        run(command)
 
-    if run(f"rm -rf {archive_path_server}web_static").failed is True:
-        return False
+        run("rm -rf {}web_static".format(archive_path_server))
 
-    # Delete the symbolic link /data/web_static/current from the web server
-    if run("rm -rf /data/web_static/current").failed is True:
-        return False
+        # Delete the symbolic link /data/web_static/current from the web server
+        run("rm -rf /data/web_static/current")
 
-    # Create a new the symbolic link /data/web_static/current on the
-    # web server, linked to the new version of the code
-    # /data/web_static/releases/<archive filename without extension>
-    command = f"ln -s {archive_path_server} /data/web_static/current"
-    if run(command).failed is True:
+        # Create a new the symbolic link /data/web_static/current on the
+        # web server, linked to the new version of the code
+        # /data/web_static/releases/<archive filename without extension>
+        command = "ln -s {} /data/web_static/current".format(archive_path_server)
+        run(command)
+        return True
+    except:
         return False
-
-    return True
