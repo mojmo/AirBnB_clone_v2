@@ -10,7 +10,6 @@ in the versions directory and follows the naming convention
 import os
 from fabric.api import *
 from fabric.operations import *
-from datetime import datetime
 
 
 env.hosts = ['3.83.253.65', '3.84.239.237']
@@ -40,6 +39,9 @@ def do_deploy(archive_path):
 
     # Upload the archive to the /tmp/ directory of the web server
     if put(archive_path, f"/tmp/{archive_file}.tgz").failed is True:
+        return False
+
+    if run(f"rm -rf {archive_path_server}").failed is True:
         return False
 
     if run(f"mkdir -p {archive_path_server}").failed is True:
