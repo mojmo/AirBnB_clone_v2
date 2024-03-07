@@ -35,12 +35,11 @@ def do_deploy(archive_path):
     if os.path.isfile(archive_path) is False:
         return False
 
-    # env.hosts = ['3.83.253.65', '3.84.239.237']
     archive_file = archive_path.split("/")[-1].split(".")[0]
     archive_path_server = f"/data/web_static/releases/{archive_file}/"
 
     # Upload the archive to the /tmp/ directory of the web server
-    if put(archive_path, "/tmp/").failed is True:
+    if put(archive_path, f"/tmp/{archive_file}.tgz").failed is True:
         return False
 
     if run(f"mkdir -p {archive_path_server}").failed is True:
@@ -57,7 +56,7 @@ def do_deploy(archive_path):
     if run(f"rm /tmp/{archive_file}.tgz").failed is True:
         return False
 
-    command = f"mv {archive_path_server}web_static/* {archive_path_server}"
+    command = f"rsync -a {archive_path_server}web_static/ {archive_path_server}"
     if run(command).failed is True:
         return False
 
