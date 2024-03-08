@@ -23,6 +23,7 @@ def do_clean(number=0):
     # Remove old releases
     releases_path = "/data/web_static/releases"
     with cd(releases_path):
-        releases = run("ls -tr | grep 'web_static_'").split()
+        releases = run("ls -tr").split()
+        releases = [r for r in releases if "web_static_" in r]
         for release in releases[:-number]:
             run(f"rm -rf {release}")
