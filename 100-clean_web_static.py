@@ -16,8 +16,9 @@ def do_clean(number=0):
     # Remove old archives
     archives_path = "versions"
     archives = sorted(os.listdir(archives_path))
+    [archives.pop() for i in range(number)]
     with lcd(archives_path):
-        for archive in archives[:-number]:
+        for archive in archives:
             local("rm {}".format(archive))
 
     # Remove old releases
@@ -25,5 +26,6 @@ def do_clean(number=0):
     with cd(releases_path):
         releases = run("ls -tr").split()
         releases = [r for r in releases if "web_static_" in r]
-        for release in releases[:-number]:
+        [releases.pop() for i in range(number)]
+        for release in releases:
             run(f"rm -rf {release}")
