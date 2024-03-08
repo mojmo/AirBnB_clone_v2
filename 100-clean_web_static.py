@@ -11,7 +11,10 @@ def do_clean(number=0):
     """Cleans up old archives and releases from the server."""
 
     # Convert number to an integer, default to 1 if 0 or invalid
-    number = max(1, int(number))
+    if int(number) == 0:
+        number = 1
+    else:
+        number = int(number)
 
     # Remove old archives
     archives_path = "versions"
