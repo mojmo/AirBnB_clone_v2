@@ -50,9 +50,9 @@ def do_deploy(archive_path):
         # Delete the archive from the web server
         run("rm /tmp/{}.tgz".format(arch_file))
 
-        run("mv {}web_static/* {}".format(arch_path_s, arch_path_s))
+        run("rsync -a {}web_static/ {}".format(arch_path_s, arch_path_s))
 
-        run("rm -rf {}web_static".format(arch_path_s))
+        run("rm -rf {}web_static/*".format(arch_path_s))
 
         # Delete the symbolic link /data/web_static/current from the web server
         run("rm -rf /data/web_static/current")
