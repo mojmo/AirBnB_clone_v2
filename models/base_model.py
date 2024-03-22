@@ -17,9 +17,9 @@ else:
 class BaseModel:
     """Base class for data models."""
     if models.storage_type == "db":
-        id = Column(String(60), primary_key=True)
-        created_at = Column(DateTime, default=datetime.utcnow)
-        updated_at = Column(DateTime, default=datetime.utcnow)
+        id = Column(String(60), primary_key=True, nullable=False)
+        created_at = Column(DateTime, default=datetime.now(datetime.UTC))
+        updated_at = Column(DateTime, default=datetime.now(datetime.UTC))
 
     def __init__(self, *args, **kwargs):
         """
